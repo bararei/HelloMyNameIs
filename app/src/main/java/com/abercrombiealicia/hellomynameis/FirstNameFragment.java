@@ -1,5 +1,6 @@
 package com.abercrombiealicia.hellomynameis;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,8 +45,27 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     private String mTimePeriod = "";
     private String mGender = "";
 
-    //DBHandler dbHandler = new DBHandler(getContext());
+    OnSubmitListener mCallback;
 
+    //Container activity must implement this interface so that the fragment can deliver information
+    public interface OnSubmitListener {
+        void onSubmitClick();
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception.
+        try {
+            mCallback = (OnSubmitListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnSubmitListener");
+        }
+    }
 
     /**
      * Perform initialization of all fragments and loaders.
@@ -149,6 +169,20 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
+        //set onclick adapter
+        ((NameFragmentAdapter) mAdapter).setOnItemClickListener(new
+                NameFragmentAdapter.MyClickListener() {
+                    @Override
+                    public void onItemClick(int position, View v) {
+                        Log.i("LOG", " Clicked on Item " + position);
+                        NameListSingleton.get(getContext()).setFirstName(namesArrayList.get
+                                (position));
+                        Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getFirstName());
+
+                        mCallback.onSubmitClick();
+                    }
+                });
+
         return view;
     }
 
@@ -172,15 +206,15 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         switch(parent.getId()) {
             case R.id.spinner_region_1:
                 mRegion = regionArrayList.get(position);
-                test.setText(mRegion);
+                //test.setText(mRegion);
                 break;
             case R.id.spinner_time_1:
                 mTimePeriod = timeArraylist.get(position);
-                test.setText(mTimePeriod);
+                //test.setText(mTimePeriod);
                 break;
             case R.id.spinner_gender_1:
                 mGender = genderArraylist.get(position);
-                test.setText(mGender);
+               // test.setText(mGender);
                 break;
         }
 
@@ -204,6 +238,5 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         genderArraylist.add("F");
     }
 
-    //mAdapter.setOnItemClickListener(new NameFragmentAdapter.MyClickListener)
 
 }

@@ -2,4 +2,7 @@
     <string name="app_name">HelloMyNameIs</string>
     <string name="first_name_intro">Select all three options from the drop down menus below. Your
                                     name choices will then appear below. Happy choosing!</string>
+    <string name="middle_name_intro">Select all three options from the drop down menus below. Your
+                                    name choices will then appear below. The first name you've
+                                    already chosen is listed below. Happy choosing!</string>
 </resources>

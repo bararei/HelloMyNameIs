@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        //SQLiteDatabase db = this.getWritableDatabase();
-        //onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION);
-        //addNamesToDatabase(context, db);
+        SQLiteDatabase db = this.getWritableDatabase();
+        onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION);
+        addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the

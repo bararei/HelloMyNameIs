@@ -3,7 +3,7 @@ package com.abercrombiealicia.hellomynameis;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener {
 
     DBHandler test;
     @Override
@@ -22,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
                     .addToBackStack(null)
                     .commit();
         }
+
+    }
+
+    @Override
+    public void onSubmitClick() {
 
     }
 }
