@@ -1,9 +1,10 @@
 package com.abercrombiealicia.hellomynameis;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener {
+public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener {
 
     DBHandler test;
     @Override
@@ -26,7 +27,20 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     }
 
     @Override
-    public void onSubmitClick() {
+    public void onSubmitClickFirstName() {
+
+        MiddleNameFragment middleNameFragment = new MiddleNameFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, middleNameFragment);
+        transaction.addToBackStack("MiddleName");
+        transaction.commit();
+
+
+    }
+
+    @Override
+    public void onSubmitClickMiddleName() {
 
     }
 }

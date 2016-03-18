@@ -208,13 +208,6 @@ public class DBHandler extends SQLiteOpenHelper {
             allNames.add(cursor.getString(0));
         }
 
-
-
-
-
-
-
-
         return allNames;
     }
 }

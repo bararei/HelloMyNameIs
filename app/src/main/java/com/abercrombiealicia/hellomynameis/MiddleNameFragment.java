@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,15 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-
 /**
- * Created by Spheven on 3/4/2016.
+ * Created by Spheven on 3/17/2016.
  */
-public class FirstNameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private TextView mIntro;
     private Spinner mSpinnerRegion;
@@ -33,7 +30,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private TextView test;
+    private TextView mFirstName;
     private Button mBtnGetNames;
 
     private ArrayList<String> regionArrayList = new ArrayList<>();
@@ -49,7 +46,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
 
     //Container activity must implement this interface so that the fragment can deliver information
     public interface OnSubmitListener {
-        void onSubmitClickFirstName();
+        void onSubmitClickMiddleName();
     }
 
 
@@ -101,15 +98,15 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_first_name, container, false);
+        View view = inflater.inflate(R.layout.fragment_middle_name, container, false);
 
         //set the basic widgets
-        mIntro = (TextView) view.findViewById(R.id.first_name_intro);
-        mSpinnerRegion = (Spinner) view.findViewById(R.id.spinner_region_1);
-        mSpinnerTime = (Spinner) view.findViewById(R.id.spinner_time_1);
-        mSpinnerGender = (Spinner) view.findViewById(R.id.spinner_gender_1);
-        test = (TextView) view.findViewById(R.id.first_name_test);
-        mBtnGetNames = (Button) view.findViewById(R.id.btn_get_first_names);
+        mIntro = (TextView) view.findViewById(R.id.middle_name_intro);
+        mSpinnerRegion = (Spinner) view.findViewById(R.id.spinner_region_2);
+        mSpinnerTime = (Spinner) view.findViewById(R.id.spinner_time_2);
+        mSpinnerGender = (Spinner) view.findViewById(R.id.spinner_gender_2);
+        mFirstName = (TextView) view.findViewById(R.id.middle_name_first);
+        mBtnGetNames = (Button) view.findViewById(R.id.btn_get_middle_names);
 
 
 
@@ -121,6 +118,8 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         timeArraylist = dbHandler.getTimePeriod();
         addGenderToArray();
 
+        //set mFirstName to first name from singleton
+        mFirstName.setText(NameListSingleton.get(getContext()).getFirstName());
 
         //wire up region adapter
         ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, regionArrayList);
@@ -159,7 +158,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         });
 
         //recycler view stuff
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_first_name);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_middle_name);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -175,11 +174,11 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
                     @Override
                     public void onItemClick(int position, View v) {
                         Log.i("LOG", " Clicked on Item " + position);
-                        NameListSingleton.get(getContext()).setFirstName(namesArrayList.get
+                        NameListSingleton.get(getContext()).setMiddleName(namesArrayList.get
                                 (position));
-                        Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getFirstName());
+                        Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getMiddleName());
 
-                        mCallback.onSubmitClickFirstName();
+                        mCallback.onSubmitClickMiddleName();
                     }
                 });
 
@@ -204,17 +203,17 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         switch(parent.getId()) {
-            case R.id.spinner_region_1:
+            case R.id.spinner_region_2:
                 mRegion = regionArrayList.get(position);
                 //test.setText(mRegion);
                 break;
-            case R.id.spinner_time_1:
+            case R.id.spinner_time_2:
                 mTimePeriod = timeArraylist.get(position);
                 //test.setText(mTimePeriod);
                 break;
-            case R.id.spinner_gender_1:
+            case R.id.spinner_gender_2:
                 mGender = genderArraylist.get(position);
-               // test.setText(mGender);
+                // test.setText(mGender);
                 break;
         }
 
@@ -237,6 +236,5 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         genderArraylist.add("M");
         genderArraylist.add("F");
     }
-
 
 }
