@@ -5,4 +5,7 @@
     <string name="middle_name_intro">Select all three options from the drop down menus below. Your
                                     name choices will then appear below. The first name you\'ve
                                     already chosen is listed below. Happy choosing!</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
 </resources>
