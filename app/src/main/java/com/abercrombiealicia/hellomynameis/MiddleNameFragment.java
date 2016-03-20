@@ -73,6 +73,7 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ((MainActivity) getActivity()).hideFab();
     }
 
     /**
@@ -99,6 +100,8 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
         //return super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_middle_name, container, false);
+
+
 
         //set the basic widgets
         mIntro = (TextView) view.findViewById(R.id.middle_name_intro);

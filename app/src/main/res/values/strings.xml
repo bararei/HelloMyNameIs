@@ -5,6 +5,11 @@
     <string name="middle_name_intro">Select all three options from the drop down menus below. Your
                                     name choices will then appear below. The first name you\'ve
                                     already chosen is listed below. Happy choosing!</string>
+    <string name="project_intro">Welcome to My Name Is, the name generator app for writers! Create
+                                projects below and then generate names to store in each of your projects
+                                by region, time period and gender. \n Click on the add button to get started
+                                on your first project or tap on one you\'ve already made to see the names
+                                you\'ve already stored or add more. </string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

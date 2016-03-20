@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
-                                        NavigationView.OnNavigationItemSelectedListener {
+                                        NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener {
 
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -41,18 +41,41 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         if (findViewById(R.id.fragmentContainer) != null) {
 
-            FirstNameFragment firstNameFragment = new FirstNameFragment();
+            /*FirstNameFragment firstNameFragment = new FirstNameFragment();
             firstNameFragment.setArguments(getIntent().getExtras());
 
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmentContainer, firstNameFragment)
                     .addToBackStack("FirstName")
+                    .commit();*/
+
+            ProjectFragment projectFragment = new ProjectFragment();
+            projectFragment.setArguments(getIntent().getExtras());
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, projectFragment)
+                    .addToBackStack("ProjectFragment")
                     .commit();
         }
 
+
+    }
+
+    @Override
+    public void onSubmitClickProjectList() {
+
+        FirstNameFragment firstNameFragment = new FirstNameFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragmentContainer, firstNameFragment);
+                                        transaction.addToBackStack("FirstName");
+                                        transaction.commit();
 
     }
 
@@ -73,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     public void onSubmitClickMiddleName() {
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -114,6 +138,14 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void hideFab() {
+        fab.hide();
+    }
+
+    public void showFab() {
+        fab.show();
     }
 
 }

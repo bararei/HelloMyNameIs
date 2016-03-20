@@ -158,9 +158,17 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAMES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAMELIST);
-        onCreate(db);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAMELIST);
+        String CREATE_NAMES_TABLE = "CREATE TABLE "
+                + TABLE_NAMES + "("
+                + COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COLUMN_NAME + " TEXT, "
+                + COLUMN_NAME_REGION + " TEXT, "
+                + COLUMN_NAME_TIMEPERIOD + " TEXT, "
+                + COLUMN_NAME_GENDER + " TEXT)";
+
+        db.execSQL(CREATE_NAMES_TABLE);
     }
 
     public ArrayList<String> getRegion() {

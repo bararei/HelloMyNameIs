@@ -76,6 +76,8 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ((MainActivity) getActivity()).hideFab();
+
     }
 
     /**
