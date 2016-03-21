@@ -1,6 +1,8 @@
 package com.abercrombiealicia.hellomynameis;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,6 +31,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<String> projectArrayList = new ArrayList<>();
+
+    String mProjectName;
+    String mProjectDescription;
 
 
     OnSubmitListener mCallback;
@@ -93,10 +99,10 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
      */
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_project, container, false);
+        final View view = inflater.inflate(R.layout.fragment_project, container, false);
 
         //wire up the widgets
         mIntro = (TextView) view.findViewById(R.id.project_intro);
@@ -125,6 +131,54 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                     mCallback.onSubmitClickProjectList();
                 }
             });
+
+        MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View view1 = inflater.inflate(R.layout.dialog_add_project, null);
+                builder.setView(view1);
+
+                builder.setTitle("Add a New Project");
+
+                builder.setPositiveButton("Add Project", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText projectName = (EditText) view1.findViewById(R.id.input_project_name);
+                        mProjectName = projectName.getText().toString();
+
+                        EditText projectDescription = (EditText) view1.findViewById(R.id.input_project_description);
+                        mProjectDescription = projectDescription.getText().toString();
+
+                        if (mProjectName.isEmpty()) {
+                            return;
+                        }
+
+                        //add logic here to add project information to database
+                        DBHandler dbHandler = new DBHandler(getContext());
+                        dbHandler.addProjectToDatabase(mProjectName,mProjectDescription);
+                        Log.d("LOG", mProjectName + " added to database");
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.show();
+
+
+
+            }
+        });
 
         return view;
     }

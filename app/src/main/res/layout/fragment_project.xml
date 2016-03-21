@@ -5,23 +5,36 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/project_intro"
-        android:id="@+id/project_intro"/>
+        android:id="@+id/project_intro"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="My Projects"
         android:id="@+id/my_projects"
-        android:layout_gravity="center_horizontal"/>
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="10dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_project"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 
 </LinearLayout>

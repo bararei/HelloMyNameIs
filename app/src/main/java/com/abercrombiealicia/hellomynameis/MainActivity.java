@@ -16,10 +16,10 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
                                         NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener {
 
-    DrawerLayout drawerLayout;
-    Toolbar toolbar;
-    FloatingActionButton fab;
-    NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
+    public  FloatingActionButton fab;
+    private NavigationView navigationView;
 
 
 

@@ -218,4 +218,16 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return allNames;
     }
+
+    public void addProjectToDatabase(String projectName, String projectDescription) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PROJECT_NAME, projectName);
+        values.put(COLUMN_PROJECT_DESC, projectDescription);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_PROJECTS, null, values);
+        db.close();
+    }
 }
