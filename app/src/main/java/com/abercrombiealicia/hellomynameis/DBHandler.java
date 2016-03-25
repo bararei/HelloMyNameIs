@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        SQLiteDatabase db = this.getWritableDatabase();
-        onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION);
-        addNamesToDatabase(context, db);
+       // SQLiteDatabase db = this.getWritableDatabase();
+       // onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION);
+       // addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -229,5 +229,24 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_PROJECTS, null, values);
         db.close();
+    }
+
+    public ArrayList<ProjectObject> getProjectsFromDatabase() {
+        ArrayList<ProjectObject> allProjects = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+        Cursor cursor = db.rawQuery("SELECT * FROM projects;", null);
+        while (cursor.moveToNext()) {
+            ProjectObject projectObject = new ProjectObject();
+            String projectName = cursor.getString(cursor.getColumnIndex("name"));
+            String projectDescription = cursor.getString(cursor.getColumnIndex("description"));
+            projectObject.setProjectName(projectName);
+            projectObject.setProjectDescription(projectDescription);
+            allProjects.add(projectObject);
+        }
+
+        return allProjects;
     }
 }

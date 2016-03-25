@@ -10,19 +10,25 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
  * Created by Spheven on 3/19/2016.
  */
-public class ProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+public class ProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener,
+        AdapterView.OnItemLongClickListener{
 
     TextView mIntro;
     TextView mMyProject;
@@ -30,13 +36,14 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ArrayList<String> projectArrayList = new ArrayList<>();
+    private ArrayList<ProjectObject> projectArrayList = new ArrayList<>();
 
     String mProjectName;
     String mProjectDescription;
 
 
     OnSubmitListener mCallback;
+
 
     //Container activity must implement this interface so that the fragment can deliver information
     public interface OnSubmitListener {
@@ -108,29 +115,39 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         mIntro = (TextView) view.findViewById(R.id.project_intro);
         mMyProject = (TextView) view.findViewById(R.id.my_projects);
 
+        DBHandler dbHandler = new DBHandler(getContext());
+        projectArrayList = dbHandler.getProjectsFromDatabase();
+
         //RecyclerView stuff... needs to be more robust, just a placeholder
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_project);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new NameFragmentAdapter(projectArrayList);
+        mAdapter = new ProjectFragmentAdapter(projectArrayList);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
-        ((NameFragmentAdapter) mAdapter).setOnItemClickListener(new
-                                                                        NameFragmentAdapter.MyClickListener() {
-                                                                            @Override
-                                                                            public void onItemClick(int position, View v) {
-                    Log.i("LOG", " Clicked on Item " + position);
-                    NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
-                            (position));
-                    Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
+        registerForContextMenu(mRecyclerView);
 
-                    mCallback.onSubmitClickProjectList();
-                }
-            });
+        ((ProjectFragmentAdapter) mAdapter).setOnItemClickListener(new
+                               ProjectFragmentAdapter.MyClickListener() {
+                                   @Override
+                                   public void onItemClick(int position, View v) {
+                                       Log.i("LOG", " Clicked on Item " + position);
+                                       NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
+                                               (position).getProjectName());
+                                       Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
+
+                                       mCallback.onSubmitClickProjectList();
+                                   }
+
+                                   public void onItemLongClick(int position, View v) {
+
+                                   }
+                               });
+
 
         MainActivity mainActivity = (MainActivity)getActivity();
         mainActivity.fab.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +180,12 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                         DBHandler dbHandler = new DBHandler(getContext());
                         dbHandler.addProjectToDatabase(mProjectName,mProjectDescription);
                         Log.d("LOG", mProjectName + " added to database");
+
+                        projectArrayList = dbHandler.getProjectsFromDatabase();
+                        mRecyclerView.setLayoutManager(mLayoutManager);
+                        mAdapter = new ProjectFragmentAdapter(projectArrayList);
+
+                        mRecyclerView.setAdapter(mAdapter);
                     }
                 });
 
@@ -214,4 +237,10 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
+    }
+
 }
