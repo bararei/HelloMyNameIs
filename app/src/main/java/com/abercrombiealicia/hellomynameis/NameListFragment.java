@@ -3,43 +3,38 @@ package com.abercrombiealicia.hellomynameis;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
  * Created by Spheven on 3/19/2016.
  */
-public class ProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener,
-        AdapterView.OnItemLongClickListener{
+public class NameListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    TextView mIntro;
-    TextView mMyProject;
+    TextView mProjectNameLabel;
+    TextView mProjectName;
+    TextView mProjectDescriptionLabel;
+    TextView mProjectDescription;
+    TextView mMyNames;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ArrayList<ProjectObject> projectArrayList = new ArrayList<>();
+    private ArrayList<NameListObject> mNamesListArrayList = new ArrayList<>();
 
-    String mProjectName;
-    String mProjectDescription;
+
 
 
     OnSubmitListener mCallback;
@@ -47,7 +42,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     //Container activity must implement this interface so that the fragment can deliver information
     public interface OnSubmitListener {
-        void onSubmitClickProjectList();
+        void onSubmitClickNameList();
     }
 
 
@@ -109,21 +104,24 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
 
-        final View view = inflater.inflate(R.layout.fragment_project, container, false);
+        final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
         //wire up the widgets
-        mIntro = (TextView) view.findViewById(R.id.project_intro);
-        mMyProject = (TextView) view.findViewById(R.id.my_projects);
+        mProjectNameLabel = (TextView) view.findViewById(R.id.namelist_project_name_label);
+        mProjectName = (TextView) view.findViewById(R.id.namelist_project_name);
+        mProjectDescriptionLabel = (TextView) view.findViewById(R.id.namelist_project_description_label);
+        mProjectDescription = (TextView) view.findViewById(R.id.namelist_project_description);
+        mMyNames = (TextView) view.findViewById(R.id.namelist_my_names);
 
         DBHandler dbHandler = new DBHandler(getContext());
-        projectArrayList = dbHandler.getProjectsFromDatabase();
+       // mNameListArrayList = dbHandler.getProjectsFromDatabase();
 
         //RecyclerView stuff... needs to be more robust, just a placeholder
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_project);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_namelist);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ProjectFragmentAdapter(projectArrayList);
+        mAdapter = new NameListFragmentAdapter(mNamesListArrayList);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
@@ -131,23 +129,12 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
         registerForContextMenu(mRecyclerView);
 
-        ((ProjectFragmentAdapter) mAdapter).setOnItemClickListener(new
-                   ProjectFragmentAdapter.MyClickListener() {
-                       @Override
-                       public void onItemClick(int position, View v) {
-                           Log.i("LOG", " Clicked on Item " + position);
-                           NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
-                                   (position).getProjectName());
-                           NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
-                           Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
+        ((NameListFragmentAdapter) mAdapter).setOnItemClickListener(new NameListFragmentAdapter.MyClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
 
-                           mCallback.onSubmitClickProjectList();
-                       }
-
-                       public void onItemLongClick(int position, View v) {
-
-                       }
-                   });
+            }
+        });
 
 
         MainActivity mainActivity = (MainActivity)getActivity();
@@ -156,48 +143,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                final View view1 = inflater.inflate(R.layout.dialog_add_project, null);
-                builder.setView(view1);
-
-                builder.setTitle("Add a New Project");
-
-                builder.setPositiveButton("Add Project", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EditText projectName = (EditText) view1.findViewById(R.id.input_project_name);
-                        mProjectName = projectName.getText().toString();
-
-                        EditText projectDescription = (EditText) view1.findViewById(R.id.input_project_description);
-                        mProjectDescription = projectDescription.getText().toString();
-
-                        if (mProjectName.isEmpty()) {
-                            return;
-                        }
-
-                        //add logic here to add project information to database
-                        DBHandler dbHandler = new DBHandler(getContext());
-                        dbHandler.addProjectToDatabase(mProjectName,mProjectDescription);
-                        Log.d("LOG", mProjectName + " added to database");
-
-                        projectArrayList = dbHandler.getProjectsFromDatabase();
-                        mRecyclerView.setLayoutManager(mLayoutManager);
-                        mAdapter = new ProjectFragmentAdapter(projectArrayList);
-
-                        mRecyclerView.setAdapter(mAdapter);
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.show();
 
 
 
@@ -239,9 +185,5 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
-    }
 
 }

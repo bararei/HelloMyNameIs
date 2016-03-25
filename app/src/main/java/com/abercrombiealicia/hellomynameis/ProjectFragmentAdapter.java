@@ -47,9 +47,6 @@ public class ProjectFragmentAdapter extends RecyclerView
         this.myClickListener = myClickListener;
     }
 
-    public void setOnItemLongClickListener (MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
-    }
 
     public ProjectFragmentAdapter(ArrayList<ProjectObject> myDataset) {
         mDataset = myDataset;

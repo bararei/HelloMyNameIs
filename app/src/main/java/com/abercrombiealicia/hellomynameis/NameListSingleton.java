@@ -12,6 +12,7 @@ public class NameListSingleton {
     private static NameListSingleton mInstance;
 
     private String mProjectName;
+    private String mProjectDescription;
     private String mFirstName;
     private String mMiddleName;
 
@@ -21,6 +22,14 @@ public class NameListSingleton {
 
     public void setProjectName(String projectName) {
         mProjectName = projectName;
+    }
+
+    public String getmProjectDescription() {
+        return mProjectDescription;
+    }
+
+    public void setmProjectDescription(String mProjectDescription) {
+        this.mProjectDescription = mProjectDescription;
     }
 
     public String getFirstName() {
