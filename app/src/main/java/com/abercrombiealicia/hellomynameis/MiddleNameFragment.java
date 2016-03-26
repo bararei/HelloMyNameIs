@@ -181,6 +181,18 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
                                 (position));
                         Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getMiddleName());
 
+                        String projectName = NameListSingleton.get(getContext()).getProjectName();
+                        String firstName = NameListSingleton.get(getContext()).getFirstName();
+                        String middleName = NameListSingleton.get(getContext()).getMiddleName();
+                        Log.i("LOG", "Got names from singleton");
+                        int projectID = dbHandler.getProjectId(projectName);
+                        int firstNameID = dbHandler.getNameId(firstName);
+                        int middleNameID = dbHandler.getNameId(middleName);
+                        Log.d("LOG", "Got ids from database");
+
+                        dbHandler.addNameListToDatabase(projectID, firstNameID, middleNameID);
+                        Log.d("LOG", "Added names to database");
+
                         mCallback.onSubmitClickMiddleName();
                     }
                 });

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Spheven on 3/19/2016.
@@ -113,21 +114,25 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         mProjectDescription = (TextView) view.findViewById(R.id.namelist_project_description);
         mMyNames = (TextView) view.findViewById(R.id.namelist_my_names);
 
-        DBHandler dbHandler = new DBHandler(getContext());
-       // mNameListArrayList = dbHandler.getProjectsFromDatabase();
+        //set name and description from singleton
+        mProjectName.setText(NameListSingleton.get(getContext()).getProjectName());
+        mProjectDescription.setText(NameListSingleton.get(getContext()).getmProjectDescription());
 
         //RecyclerView stuff... needs to be more robust, just a placeholder
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_namelist);
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        createNamesArrayList();
+        for(NameListObject object : mNamesListArrayList) {
+            String item = object.getmFirstName();
+            Log.i("WTF", item);
+        }
         mAdapter = new NameListFragmentAdapter(mNamesListArrayList);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
-
-        registerForContextMenu(mRecyclerView);
 
         ((NameListFragmentAdapter) mAdapter).setOnItemClickListener(new NameListFragmentAdapter.MyClickListener() {
             @Override
@@ -143,7 +148,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
-
+            mCallback.onSubmitClickNameList();
 
 
 
@@ -183,6 +188,14 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void createNamesArrayList() {
+        //Set up the arraylist stuff
+        DBHandler dbHandler = new DBHandler(getContext());
+        String projectName = NameListSingleton.get(getContext()).getProjectName();
+        int projectID = dbHandler.getProjectId(projectName);
+        mNamesListArrayList = dbHandler.getNameListFromDatabase(projectID);
     }
 
 

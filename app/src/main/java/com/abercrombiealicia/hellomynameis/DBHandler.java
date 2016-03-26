@@ -21,7 +21,7 @@ import java.util.TreeSet;
  */
 public class DBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "hellomynameisDB.db";
     private static final String TABLE_PROJECTS = "projects";
     private static final String TABLE_NAMELIST = "name_list";
@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-       // SQLiteDatabase db = this.getWritableDatabase();
-       // onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION);
-       // addNamesToDatabase(context, db);
+       //SQLiteDatabase db = this.getWritableDatabase();
+       // onUpgrade(db, 1, DATABASE_VERSION);
+      // addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -188,7 +188,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public ArrayList<String> getTimePeriod() {
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Set<String> timeSet = new TreeSet<>();
 
         Cursor cursor = db.rawQuery("SELECT * FROM names;", null);
@@ -204,7 +204,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public ArrayList<String> getNamesFromDatabase(String region, String time, String gender) {
 
         ArrayList<String> allNames = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor cursor;
         String[] columnsToReturn = new String[] {COLUMN_NAME};
 
@@ -226,7 +226,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_PROJECT_NAME, projectName);
         values.put(COLUMN_PROJECT_DESC, projectDescription);
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_PROJECTS, null, values);
         db.close();
     }
@@ -234,7 +234,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public ArrayList<ProjectObject> getProjectsFromDatabase() {
         ArrayList<ProjectObject> allProjects = new ArrayList<>();
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
 
 
         Cursor cursor = db.rawQuery("SELECT * FROM projects;", null);
@@ -245,8 +245,118 @@ public class DBHandler extends SQLiteOpenHelper {
             projectObject.setProjectName(projectName);
             projectObject.setProjectDescription(projectDescription);
             allProjects.add(projectObject);
+            db.close();
         }
 
         return allProjects;
+    }
+
+    public int getProjectId(String projectName) {
+        int projectID = 0;
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_PROJECT_ID + " FROM " + TABLE_PROJECTS + " WHERE "
+                + COLUMN_PROJECT_NAME  + " = '" + projectName + "';", null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                projectID = cursor.getInt(cursor.getColumnIndex("id"));
+            }
+        }
+
+        Log.d("TEST", projectName);
+        cursor.close();
+        db.close();
+
+        return projectID;
+    }
+
+    public int getNameId(String name) {
+        int nameID = 0;
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_NAME_ID + " FROM " + TABLE_NAMES + " WHERE "
+                + COLUMN_NAME + " = '" + name + "';", null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                nameID = cursor.getInt(cursor.getColumnIndex("id"));
+            }
+        }
+
+        Log.d("TEST", name);
+        cursor.close();
+        db.close();
+        return nameID;
+    }
+
+    public void addNameListToDatabase(int projectID, int firstNameID, int middleNameID) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAMELIST_PROJECT_ID, projectID);
+        values.put(COLUMN_NAMELIST_NAME_ID1, firstNameID);
+        values.put(COLUMN_NAMELIST_NAME_ID2, middleNameID);
+
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_NAMELIST, null, values);
+        db.close();
+
+    }
+
+    public ArrayList<NameListObject> getNameListFromDatabase(int projectID) {
+        ArrayList<NameListObject> nameListObjects = new ArrayList<>();
+        int nameID1;
+        int nameID2;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * from name_list WHERE project_id = '" + projectID + "';", null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                nameID1 = cursor.getInt(1);
+                nameID2 = cursor.getInt(2);
+                Log.d("derp", String.valueOf(nameID1));
+
+                NameListObject nameListObject = new NameListObject();
+                Cursor cursor1 = db.rawQuery("SELECT * FROM " + TABLE_NAMES + " WHERE id = '" + nameID1 + "';", null);
+                if (cursor1 != null) {
+                    if (cursor1.moveToFirst()) {
+                        String firstName = cursor1.getString(1);
+                        String region = cursor1.getString(2);
+                        String timePeriod = cursor1.getString(3);
+                        String gender = cursor1.getString(4);
+
+                        nameListObject.setmFirstName(firstName);
+                        nameListObject.setmFirstNameRegion(region);
+                        nameListObject.setmFirstNameTimePeriod(timePeriod);
+                        nameListObject.setmFirstNameGender(gender);
+                    }
+                }
+                cursor1.close();
+                Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_NAMES + " WHERE id = '" + nameID2 + "';", null);
+                if (cursor2 != null) {
+                    if (cursor2.moveToFirst()) {
+                        String middleName = cursor2.getString(1);
+                        String region = cursor2.getString(2);
+                        String timePeriod = cursor2.getString(3);
+                        String gender = cursor2.getString(4);
+
+                        nameListObject.setmLastName(middleName);
+                        nameListObject.setmLastNameRegion(region);
+                        nameListObject.setmLastNameTimePeriod(timePeriod);
+                        nameListObject.setmLastNameGender(gender);
+                    }
+                }
+                cursor2.close();
+                nameListObjects.add(nameListObject);
+            }
+        }
+        cursor.close();
+        db.close();
+        return nameListObjects;
     }
 }

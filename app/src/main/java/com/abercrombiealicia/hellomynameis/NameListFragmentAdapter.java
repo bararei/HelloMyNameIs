@@ -85,8 +85,9 @@ public class NameListFragmentAdapter extends RecyclerView
         holder.firstNameGender.setText(mDataset.get(position).getmFirstNameGender());
         holder.middleName.setText(mDataset.get(position).getmLastName());
         holder.middleNameRegion.setText(mDataset.get(position).getmLastNameRegion());
-        holder.middleNameTimePeriod.setText(mDataset.get(position).getmFirstNameTimePeriod());
+        holder.middleNameTimePeriod.setText(mDataset.get(position).getmLastNameTimePeriod());
         holder.middleNameGender.setText(mDataset.get(position).getmLastNameGender());
+        Log.i("TEST", "Adding BindViewHolder NameList Listeners");
     }
 
     public void addItem(NameListObject nameListObject, int index) {

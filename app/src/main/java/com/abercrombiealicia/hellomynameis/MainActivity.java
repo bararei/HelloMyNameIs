@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
-                                        NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener {
+                                        NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener {
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -70,6 +70,19 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     @Override
     public void onSubmitClickProjectList() {
 
+
+        NameListFragment nameListFragment = new NameListFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragmentContainer, nameListFragment);
+                                        transaction.addToBackStack("NameList");
+                                        transaction.commit();
+
+    }
+
+    @Override
+    public void onSubmitClickNameList() {
+
         FirstNameFragment firstNameFragment = new FirstNameFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -95,6 +108,12 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     @Override
     public void onSubmitClickMiddleName() {
 
+        NameListFragment nameListFragment = new NameListFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, nameListFragment);
+        transaction.addToBackStack("NameList");
+        transaction.commit();
     }
 
 
@@ -147,5 +166,6 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     public void showFab() {
         fab.show();
     }
+
 
 }
