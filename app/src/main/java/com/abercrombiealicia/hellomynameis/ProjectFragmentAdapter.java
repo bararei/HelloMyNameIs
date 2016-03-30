@@ -3,9 +3,12 @@ package com.abercrombiealicia.hellomynameis;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,16 +19,25 @@ import java.util.ArrayList;
 
 public class ProjectFragmentAdapter extends RecyclerView
         .Adapter<ProjectFragmentAdapter
-        .DataObjectHolder> {
+        .DataObjectHolder> implements View.OnClickListener {
 
     private ArrayList<ProjectObject> mDataset;
-    private static MyClickListener myClickListener;
+   // private static MyClickListener myClickListener;
+    protected AdapterView.OnItemClickListener listener;
+    private GestureDetector gestureDetector;
 
-    ContextMenu.ContextMenuInfo info;
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
 
-    public static class DataObjectHolder extends RecyclerView.ViewHolder
-            implements View
-            .OnClickListener {
+    }
+
+
+    public static class DataObjectHolder extends RecyclerView.ViewHolder{
         TextView name;
         TextView description;
 
@@ -34,19 +46,30 @@ public class ProjectFragmentAdapter extends RecyclerView
             name = (TextView) itemView.findViewById(R.id.projectItem);
             description = (TextView) itemView.findViewById(R.id.projectDescription);
             Log.i("TEST", "Adding Project Listeners");
-            itemView.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
         }
 
-        @Override
+        /*@Override
         public void onClick(View v) {
             myClickListener.onItemClick(getPosition(), v);
         }
+
+        /**
+         * Called when a view has been clicked and held.
+         *
+         * @param v The view that was clicked and held.
+         * @return true if the callback consumed the long click, false otherwise.
+         */
+       /* @Override
+        public boolean onLongClick(View v) {
+            myClickListener.onItemLongClick();
+            return true;
+        }*/
     }
 
-    public void setOnItemClickListener(MyClickListener myClickListener) {
+   /* public void setOnItemClickListener(MyClickListener myClickListener) {
         this.myClickListener = myClickListener;
-    }
-
+    }*/
 
     public ProjectFragmentAdapter(ArrayList<ProjectObject> myDataset) {
         mDataset = myDataset;
@@ -83,9 +106,6 @@ public class ProjectFragmentAdapter extends RecyclerView
         return mDataset.size();
     }
 
-    public interface MyClickListener {
-        public void onItemClick(int position, View v);
-    }
-
 
 }
+

@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-       SQLiteDatabase db = this.getWritableDatabase();
-       onUpgrade(db, 1, DATABASE_VERSION);
-      addNamesToDatabase(context, db);
+      // SQLiteDatabase db = this.getWritableDatabase();
+      // onUpgrade(db, 1, DATABASE_VERSION);
+      // addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -367,5 +367,28 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         Log.d("derp", "deleted" + String.valueOf(nameID1));
 
+    }
+
+    public void deleteProjectFromDatabase (int projectID) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_PROJECTS, COLUMN_PROJECT_ID + " = " + projectID, null);
+        db.close();
+
+        Log.d("derp", "deleted" + String.valueOf(projectID));
+    }
+
+    public void reAddProjectToDatabase(int projectID, String projectName, String projectDescription) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PROJECT_ID, projectID);
+        values.put(COLUMN_PROJECT_NAME, projectName);
+        values.put(COLUMN_PROJECT_DESC, projectDescription);
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_PROJECTS, null, values);
+        db.close();
+
+        Log.d("derp", "readded" + String.valueOf(projectName));
     }
 }

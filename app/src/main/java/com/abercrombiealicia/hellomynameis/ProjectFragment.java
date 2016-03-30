@@ -3,6 +3,7 @@ package com.abercrombiealicia.hellomynameis;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,7 +36,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private ProjectDatabaseObject projectDatabaseObject;
     private ArrayList<ProjectObject> projectArrayList = new ArrayList<>();
 
     String mProjectName;
@@ -131,24 +132,72 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
         registerForContextMenu(mRecyclerView);
 
-        ((ProjectFragmentAdapter) mAdapter).setOnItemClickListener(new
-                   ProjectFragmentAdapter.MyClickListener() {
-                       @Override
-                       public void onItemClick(int position, View v) {
-                           Log.i("LOG", " Clicked on Item " + position);
-                           NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
-                                   (position).getProjectName());
-                           NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
-                           Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
+      /*  ((ProjectFragmentAdapter) mAdapter).setOnItemClickListener(new
+               ProjectFragmentAdapter.MyClickListener() {
+                   @Override
+                   public void onItemClick(int position, View v) {
+                       Log.i("LOG", " Clicked on Item " + position);
+                       NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
+                               (position).getProjectName());
+                       NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
+                       Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
 
-                           mCallback.onSubmitClickProjectList();
-                       }
+                       mCallback.onSubmitClickProjectList();
+                   }
 
-                       public void onItemLongClick(int position, View v) {
+                   @Override
+                   public void onItemLongClick(int position, View v) {
+                       final ProjectObject projectObject;
+                       projectObject = projectArrayList.get(position);
 
-                       }
-                   });
+                       deleteProjectFromList(position);
+                       removeAtPosition(position);
 
+                   }
+               }); */
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View childView, int position) {
+                Log.i("LOG", " Clicked on Item " + position);
+                NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
+                        (position).getProjectName());
+                NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
+                Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
+
+                mCallback.onSubmitClickProjectList();
+            }
+
+            @Override
+            public void onItemLongPress(View childView, final int position) {
+                final ProjectObject projectObject;
+                projectObject = projectArrayList.get(position);
+
+                deleteProjectFromList(position);
+                removeAtPosition(position);
+
+                Snackbar snackbar = Snackbar
+                        .make(childView, "Project has been deleted", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                DBHandler dbHandler = new DBHandler(getContext());
+                                dbHandler.reAddProjectToDatabase(projectDatabaseObject.getmProjectID(),
+                                        projectDatabaseObject.getmProjectName(), projectDatabaseObject.getmProjectDescription());
+                                projectArrayList.add(position, projectObject);
+                                mAdapter.notifyItemInserted(position);
+
+                            }
+                        });
+                snackbar.show();
+            }
+        }) {
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
         MainActivity mainActivity = (MainActivity)getActivity();
         mainActivity.fab.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +291,35 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         return false;
+    }
+
+    public void deleteProjectFromList(int position) {
+        DBHandler dbHandler = new DBHandler(getContext());
+        NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
+                (position).getProjectName());
+        NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
+        int projectID = dbHandler.getProjectId(NameListSingleton.get(getContext()).getProjectName());
+        String projectName = NameListSingleton.get(getContext()).getProjectName();
+        String projectDescription = NameListSingleton.get(getContext()).getmProjectDescription();
+
+        saveNameToObject(projectID, projectName, projectDescription);
+
+        dbHandler.deleteProjectFromDatabase(projectID);
+
+    }
+
+    public void saveNameToObject(int projectID, String projectName, String projectDescription) {
+        projectDatabaseObject = new ProjectDatabaseObject();
+        projectDatabaseObject.setmProjectID(projectID);
+        projectDatabaseObject.setmProjectName(projectName);
+        projectDatabaseObject.setmProjectDescription(projectDescription);
+
+    }
+
+    public void removeAtPosition(int position) {
+        projectArrayList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+        mAdapter.notifyItemRangeChanged(position, projectArrayList.size());
     }
 
 }
