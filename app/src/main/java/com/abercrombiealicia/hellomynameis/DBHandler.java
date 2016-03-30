@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-       //SQLiteDatabase db = this.getWritableDatabase();
-       // onUpgrade(db, 1, DATABASE_VERSION);
-      // addNamesToDatabase(context, db);
+       SQLiteDatabase db = this.getWritableDatabase();
+       onUpgrade(db, 1, DATABASE_VERSION);
+      addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -88,7 +88,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_NAMELIST_TABLE);
         Log.d("CSVParser", "Tables created");
-
 
 
 
@@ -358,5 +357,15 @@ public class DBHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return nameListObjects;
+    }
+
+    public void deleteNamesListFromDatabase(int projectID, int nameID1, int nameID2) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete(TABLE_NAMELIST, COLUMN_NAMELIST_PROJECT_ID + " = " + projectID + " AND " + COLUMN_NAMELIST_NAME_ID1 + " = " + nameID1
+                    + " AND " + COLUMN_NAMELIST_NAME_ID2 + " = " + nameID2, null);
+        db.close();
+        Log.d("derp", "deleted" + String.valueOf(nameID1));
+
     }
 }

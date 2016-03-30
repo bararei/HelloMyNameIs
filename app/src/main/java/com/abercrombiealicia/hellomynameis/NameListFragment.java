@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,15 +26,13 @@ import java.util.Iterator;
  */
 public class NameListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    TextView mProjectNameLabel;
     TextView mProjectName;
-    TextView mProjectDescriptionLabel;
     TextView mProjectDescription;
     TextView mMyNames;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private NameListDatabaseObject nameListDatabaseObject;
     private ArrayList<NameListObject> mNamesListArrayList = new ArrayList<>();
 
 
@@ -108,19 +108,17 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
         //wire up the widgets
-        mProjectNameLabel = (TextView) view.findViewById(R.id.namelist_project_name_label);
         mProjectName = (TextView) view.findViewById(R.id.namelist_project_name);
-        mProjectDescriptionLabel = (TextView) view.findViewById(R.id.namelist_project_description_label);
         mProjectDescription = (TextView) view.findViewById(R.id.namelist_project_description);
         mMyNames = (TextView) view.findViewById(R.id.namelist_my_names);
 
         //set name and description from singleton
-        mProjectName.setText(NameListSingleton.get(getContext()).getProjectName());
-        mProjectDescription.setText(NameListSingleton.get(getContext()).getmProjectDescription());
+        mProjectName.setText("Project Name: " + NameListSingleton.get(getContext()).getProjectName());
+        mProjectDescription.setText("Project Description: " + NameListSingleton.get(getContext()).getmProjectDescription());
 
         //RecyclerView stuff... needs to be more robust, just a placeholder
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_namelist);
-        //mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         createNamesArrayList();
@@ -136,7 +134,31 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
 
         ((NameListFragmentAdapter) mAdapter).setOnItemClickListener(new NameListFragmentAdapter.MyClickListener() {
             @Override
-            public void onItemClick(int position, View v) {
+            public void onItemClick(final int position, View v) {
+
+                final NameListObject item;
+                item = mNamesListArrayList.get(position);
+
+                deleteNameFromList(position);
+                removeAtPosition(position);
+
+                Snackbar snackbar = Snackbar
+                        .make(v, "Name has been deleted", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                DBHandler dbHandler = new DBHandler(getContext());
+                                dbHandler.addNameListToDatabase(nameListDatabaseObject.getProjectID(),
+                                        nameListDatabaseObject.getNameID1(), nameListDatabaseObject.getNameID2());
+                                mNamesListArrayList.add(position, item);
+                                mAdapter.notifyItemInserted(position);
+
+                            }
+                        });
+                    snackbar.show();
+
+
 
             }
         });
@@ -196,6 +218,36 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         String projectName = NameListSingleton.get(getContext()).getProjectName();
         int projectID = dbHandler.getProjectId(projectName);
         mNamesListArrayList = dbHandler.getNameListFromDatabase(projectID);
+    }
+
+    public void deleteNameFromList(int position) {
+
+        DBHandler dbHandler = new DBHandler(getContext());
+        String projectName = NameListSingleton.get(getContext()).getProjectName();
+        int projectID = dbHandler.getProjectId(projectName);
+        String firstName = mNamesListArrayList.get(position).getmFirstName();
+        String middleName = mNamesListArrayList.get(position).getmLastName();
+        int firstNameID = dbHandler.getNameId(firstName);
+        int middleNameID = dbHandler.getNameId(middleName);
+
+        saveNameToObject(projectID, firstNameID, middleNameID);
+
+        dbHandler.deleteNamesListFromDatabase(projectID, firstNameID, middleNameID);
+    }
+
+    public void removeAtPosition(int position) {
+        mNamesListArrayList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+        mAdapter.notifyItemRangeChanged(position, mNamesListArrayList.size());
+    }
+
+    public void saveNameToObject(int projectID, int firstNameID, int middleNameID) {
+        nameListDatabaseObject = new NameListDatabaseObject();
+        nameListDatabaseObject.setProjectID(projectID);
+        nameListDatabaseObject.setNameID1(firstNameID);
+        nameListDatabaseObject.setNameID2(middleNameID);
+
+
     }
 
 
