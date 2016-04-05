@@ -43,9 +43,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-      // SQLiteDatabase db = this.getWritableDatabase();
-      // onUpgrade(db, 1, DATABASE_VERSION);
-      // addNamesToDatabase(context, db);
+        SQLiteDatabase db = this.getWritableDatabase();
+        onUpgrade(db, 1, DATABASE_VERSION);
+        addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -390,5 +390,21 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
 
         Log.d("derp", "readded" + String.valueOf(projectName));
+    }
+
+    public ArrayList<String> getProjectsForDrawerList() {
+        ArrayList<String> allProjects = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        Cursor cursor = db.rawQuery("SELECT * FROM projects ORDER BY ID desc LIMIT 5;", null);
+        while (cursor.moveToNext()) {
+            String projectName = cursor.getString(cursor.getColumnIndex("name"));
+            allProjects.add(projectName);
+            db.close();
+        }
+
+        return allProjects;
     }
 }
