@@ -264,7 +264,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
 
-        Log.d("TEST", projectName);
+//        Log.d("TEST", projectName);
         cursor.close();
         db.close();
 
@@ -285,7 +285,7 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
 
-        Log.d("TEST", name);
+      //  Log.d("TEST", name);
         cursor.close();
         db.close();
         return nameID;
@@ -392,7 +392,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.d("derp", "readded" + String.valueOf(projectName));
     }
 
-    public ArrayList<String> getProjectsForDrawerList() {
+   /* public ArrayList<String> getProjectsForDrawerList() {
         ArrayList<String> allProjects = new ArrayList<>();
 
         SQLiteDatabase db = getReadableDatabase();
@@ -402,6 +402,26 @@ public class DBHandler extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             String projectName = cursor.getString(cursor.getColumnIndex("name"));
             allProjects.add(projectName);
+            db.close();
+        }
+
+        return allProjects;
+    } */
+
+    public ArrayList<ProjectObject> getProjectsForDrawerList() {
+        ArrayList<ProjectObject> allProjects = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        Cursor cursor = db.rawQuery("SELECT * FROM projects ORDER BY ID desc LIMIT 5;", null);
+        while (cursor.moveToNext()) {
+            ProjectObject projectObject = new ProjectObject();
+            String projectName = cursor.getString(cursor.getColumnIndex("name"));
+            String projectDescription = cursor.getString(cursor.getColumnIndex("description"));
+            projectObject.setProjectName(projectName);
+            projectObject.setProjectDescription(projectDescription);
+            allProjects.add(projectObject);
             db.close();
         }
 

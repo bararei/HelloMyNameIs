@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/drawerIcon"
         android:paddingLeft="16dp"
-        android:src="@drawable/img_add"/>
+        android:src="@drawable/img_pencil"/>
 
     <TextView
         android:layout_width="wrap_content"

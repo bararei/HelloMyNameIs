@@ -236,6 +236,10 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                         mAdapter = new ProjectFragmentAdapter(projectArrayList);
 
                         mRecyclerView.setAdapter(mAdapter);
+
+                        ((MainActivity) getActivity()).updateDrawer();
+
+
                     }
                 });
 
@@ -321,5 +325,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         mAdapter.notifyItemRemoved(position);
         mAdapter.notifyItemRangeChanged(position, projectArrayList.size());
     }
+
+
 
 }

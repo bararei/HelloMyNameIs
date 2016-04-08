@@ -22,7 +22,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         // IF the view under inflation and population is header or Item
         private static final int TYPE_ITEM = 1;
 
-        private ArrayList<String> projectNamesArrayList;
+        private ArrayList<ProjectObject> projectNamesArrayList;
 
         private String name;        //String Resource for header View Name
 
@@ -61,9 +61,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
 
 
-        DrawerAdapter(ArrayList<String> projectNames,String Name){ // MyAdapter Constructor with titles and icons parameter
-            // titles, icons, name, email, profile pic are passed from the main activity as we
-            projectNamesArrayList = projectNames;             //have seen earlier
+        DrawerAdapter(ArrayList<ProjectObject> projectNames,String Name){
+
+            projectNamesArrayList = projectNames;
 
             name = Name;
 
@@ -109,7 +109,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public void onBindViewHolder(DrawerAdapter.ViewHolder holder, int position) {
             if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
                 // position by 1 and pass it to the holder while setting the text and image
-                holder.textView.setText(projectNamesArrayList.get(position-1)); // Setting the Text with the array of our Titles
+                holder.textView.setText(projectNamesArrayList.get(position-1).getProjectName()); // Setting the
+                // Text with the
+                // array of our Titles
             }
             else{
                 // Similarly we set the resources for header view
