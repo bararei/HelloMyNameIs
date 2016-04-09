@@ -130,30 +130,6 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
         registerForContextMenu(mRecyclerView);
 
-      /*  ((ProjectFragmentAdapter) mAdapter).setOnItemClickListener(new
-               ProjectFragmentAdapter.MyClickListener() {
-                   @Override
-                   public void onItemClick(int position, View v) {
-                       Log.i("LOG", " Clicked on Item " + position);
-                       NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
-                               (position).getProjectName());
-                       NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
-                       Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
-
-                       mCallback.onSubmitClickProjectList();
-                   }
-
-                   @Override
-                   public void onItemLongClick(int position, View v) {
-                       final ProjectObject projectObject;
-                       projectObject = projectArrayList.get(position);
-
-                       deleteProjectFromList(position);
-                       removeAtPosition(position);
-
-                   }
-               }); */
-
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View childView, int position) {

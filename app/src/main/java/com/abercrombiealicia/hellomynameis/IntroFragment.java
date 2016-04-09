@@ -16,7 +16,7 @@ import android.widget.TextView;
 /**
  * Created by Ali on 4/9/2016.
  */
-public class IntroHelpFragment extends Fragment implements AppStatics{
+public class IntroFragment extends Fragment implements AppStatics{
     TextView mWelcome;
     TextView mIntro;
     EditText mAuthorName;
@@ -55,7 +55,7 @@ public class IntroHelpFragment extends Fragment implements AppStatics{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        // return super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_intro_help, container, false);
+        View view = inflater.inflate(R.layout.fragment_intro, container, false);
 
         ((MainActivity) getActivity()).hideFab();
 

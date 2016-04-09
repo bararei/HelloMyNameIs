@@ -21,17 +21,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import icepick.Icepick;
-import icepick.Icicle;
 
 
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
                                         NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener,
-                                        IntroHelpFragment.OnSubmitListener, AppStatics{
+                                        IntroFragment.OnSubmitListener, AppStatics{
 
     DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -141,12 +136,12 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
 
         if (sharedPreferences.getBoolean(FIRST_RUN, true)) {
-            IntroHelpFragment introHelpFragment = new IntroHelpFragment();
-            introHelpFragment.setArguments(getIntent().getExtras());
+            IntroFragment introFragment = new IntroFragment();
+            introFragment.setArguments(getIntent().getExtras());
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, introHelpFragment)
+                    .add(R.id.fragmentContainer, introFragment)
                     .commit();
 
             sharedPreferences.edit().putBoolean(FIRST_RUN, false).commit();
@@ -224,10 +219,6 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     @Override
     public void onSubmitClickIntroHelp() {
 
-        TextView mAuthorName = (TextView) findViewById(R.id.authorName);
-        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
-        mAuthorName.setText(sharedPreferences.getString(AUTHOR_NAME_KEY,"Your Name" ));
-
         ProjectFragment projectFragment = new ProjectFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -261,14 +252,24 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case R.id.help:
+                HelpFragment helpFragment = new HelpFragment();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, helpFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
