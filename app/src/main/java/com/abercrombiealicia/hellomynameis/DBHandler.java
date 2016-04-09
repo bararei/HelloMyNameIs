@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -43,9 +44,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        SQLiteDatabase db = this.getWritableDatabase();
-        onUpgrade(db, 1, DATABASE_VERSION);
-        addNamesToDatabase(context, db);
+       // SQLiteDatabase db = this.getWritableDatabase();
+      //  onUpgrade(db, 1, DATABASE_VERSION);
+       // addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -157,8 +158,6 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAMES);
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAMELIST);
         String CREATE_NAMES_TABLE = "CREATE TABLE "
                 + TABLE_NAMES + "("
                 + COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -174,8 +173,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Set<String> regionSet = new TreeSet<>();
+        Cursor cursor;
 
-        Cursor cursor = db.rawQuery("SELECT * FROM names;", null);
+        cursor = db.query(true, TABLE_NAMES, null, null, null, null, null, null, null, null);
+
         while (cursor.moveToNext()) {
             String region = cursor.getString(cursor.getColumnIndex("region"));
             regionSet.add(region);
@@ -189,8 +190,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
         Set<String> timeSet = new TreeSet<>();
+        Cursor cursor;
 
-        Cursor cursor = db.rawQuery("SELECT * FROM names;", null);
+        cursor = db.query(true, TABLE_NAMES, null, null, null, null, null, null, null, null);
+
         while (cursor.moveToNext()) {
             String timePeriod = cursor.getString(cursor.getColumnIndex("time_period"));
             timeSet.add(timePeriod);
@@ -235,8 +238,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
+        Cursor cursor;
 
-        Cursor cursor = db.rawQuery("SELECT * FROM projects;", null);
+        cursor = db.query(true, TABLE_PROJECTS, null, null, null, null, null, null, null, null);
+
         while (cursor.moveToNext()) {
             ProjectObject projectObject = new ProjectObject();
             String projectName = cursor.getString(cursor.getColumnIndex("name"));
@@ -255,8 +260,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_PROJECT_ID + " FROM " + TABLE_PROJECTS + " WHERE "
-                + COLUMN_PROJECT_NAME  + " = '" + projectName + "';", null);
+        Cursor cursor;
+        String[] columnsToReturn = new String[] {COLUMN_PROJECT_ID};
+        String[] projectNames = new String[] {projectName};
+
+        cursor = db.query(true, TABLE_PROJECTS, columnsToReturn, COLUMN_PROJECT_NAME + " = ?", projectNames, null, null, null,null);
+
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -264,7 +273,6 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
 
-//        Log.d("TEST", projectName);
         cursor.close();
         db.close();
 
@@ -276,8 +284,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_NAME_ID + " FROM " + TABLE_NAMES + " WHERE "
-                + COLUMN_NAME + " = '" + name + "';", null);
+        Cursor cursor;
+        String[] columnsToReturn = new String[] {COLUMN_NAME_ID};
+        String[] names = new String[] {name};
+
+        cursor = db.query(true, TABLE_NAMES, columnsToReturn, COLUMN_NAME + " = ?", names, null, null, null, null);
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -312,7 +323,9 @@ public class DBHandler extends SQLiteOpenHelper {
         int nameID2;
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * from name_list WHERE project_id = '" + projectID + "';", null);
+        Cursor cursor;
+        String[] project = new String[] {String.valueOf(projectID)};
+        cursor = db.query(true, TABLE_NAMELIST, null, COLUMN_NAMELIST_PROJECT_ID + " = ?", project, null, null, null, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -321,7 +334,10 @@ public class DBHandler extends SQLiteOpenHelper {
                 Log.d("derp", String.valueOf(nameID1));
 
                 NameListObject nameListObject = new NameListObject();
-                Cursor cursor1 = db.rawQuery("SELECT * FROM " + TABLE_NAMES + " WHERE id = '" + nameID1 + "';", null);
+                Cursor cursor1;
+                String nameIDOne[] = new String[] {String.valueOf(nameID1)};
+                cursor1 = db.query(true, TABLE_NAMES, null, COLUMN_NAME_ID + " = ?", nameIDOne, null, null, null, null);
+
                 if (cursor1 != null) {
                     if (cursor1.moveToFirst()) {
                         String firstName = cursor1.getString(1);
@@ -336,7 +352,10 @@ public class DBHandler extends SQLiteOpenHelper {
                     }
                 }
                 cursor1.close();
-                Cursor cursor2 = db.rawQuery("SELECT * FROM " + TABLE_NAMES + " WHERE id = '" + nameID2 + "';", null);
+                Cursor cursor2;
+                String nameIDTwo[] = new String[] {String.valueOf(nameID2)};
+                cursor2 = db.query(true, TABLE_NAMES, null, COLUMN_NAME_ID + " = ?", nameIDTwo, null, null, null, null);
+
                 if (cursor2 != null) {
                     if (cursor2.moveToFirst()) {
                         String middleName = cursor2.getString(1);
@@ -392,29 +411,17 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.d("derp", "readded" + String.valueOf(projectName));
     }
 
-   /* public ArrayList<String> getProjectsForDrawerList() {
-        ArrayList<String> allProjects = new ArrayList<>();
-
-        SQLiteDatabase db = getReadableDatabase();
-
-
-        Cursor cursor = db.rawQuery("SELECT * FROM projects ORDER BY ID desc LIMIT 5;", null);
-        while (cursor.moveToNext()) {
-            String projectName = cursor.getString(cursor.getColumnIndex("name"));
-            allProjects.add(projectName);
-            db.close();
-        }
-
-        return allProjects;
-    } */
 
     public ArrayList<ProjectObject> getProjectsForDrawerList() {
         ArrayList<ProjectObject> allProjects = new ArrayList<>();
 
         SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor;
+        String orderBy = "ID desc";
+        String limit = "5";
 
+        cursor = db.query(true,TABLE_PROJECTS, null, null, null, null, null, orderBy, limit);
 
-        Cursor cursor = db.rawQuery("SELECT * FROM projects ORDER BY ID desc LIMIT 5;", null);
         while (cursor.moveToNext()) {
             ProjectObject projectObject = new ProjectObject();
             String projectName = cursor.getString(cursor.getColumnIndex("name"));

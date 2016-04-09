@@ -124,7 +124,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         createNamesArrayList();
         for(NameListObject object : mNamesListArrayList) {
             String item = object.getmFirstName();
-            Log.i("WTF", item);
+        //    Log.i("WTF", item);
         }
         mAdapter = new NameListFragmentAdapter(mNamesListArrayList);
         mRecyclerView.setAdapter(mAdapter);

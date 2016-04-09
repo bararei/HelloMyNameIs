@@ -31,10 +31,6 @@ public class NameListFragmentAdapter extends RecyclerView
         TextView firstNameRegion;
         TextView firstNameTimePeriod;
         TextView firstNameGender;
-        TextView middleName;
-        TextView middleNameRegion;
-        TextView middleNameTimePeriod;
-        TextView middleNameGender;
 
 
         public DataObjectHolder(View itemView) {
@@ -43,10 +39,6 @@ public class NameListFragmentAdapter extends RecyclerView
             firstNameRegion = (TextView) itemView.findViewById(R.id.namelist_first_name_region);
             firstNameTimePeriod = (TextView) itemView.findViewById(R.id.namelist_first_name_time);
             firstNameGender = (TextView) itemView.findViewById(R.id.namelist_first_name_gender);
-            middleName = (TextView) itemView.findViewById(R.id.namelist_middle_name);
-            middleNameRegion = (TextView) itemView.findViewById(R.id.namelist_middle_name_region);
-            middleNameTimePeriod = (TextView) itemView.findViewById(R.id.namelist_middle_name_time);
-            middleNameGender = (TextView) itemView.findViewById(R.id.namelist_middle_name_gender);
 
             Log.i("TEST", "Adding NameList Listeners");
             itemView.setOnClickListener(this);
@@ -79,14 +71,14 @@ public class NameListFragmentAdapter extends RecyclerView
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
-        holder.firstName.setText(mDataset.get(position).getmFirstName());
-        holder.firstNameRegion.setText(mDataset.get(position).getmFirstNameRegion());
-        holder.firstNameTimePeriod.setText(mDataset.get(position).getmFirstNameTimePeriod());
-        holder.firstNameGender.setText(mDataset.get(position).getmFirstNameGender());
-        holder.middleName.setText(mDataset.get(position).getmLastName());
-        holder.middleNameRegion.setText(mDataset.get(position).getmLastNameRegion());
-        holder.middleNameTimePeriod.setText(mDataset.get(position).getmLastNameTimePeriod());
-        holder.middleNameGender.setText(mDataset.get(position).getmLastNameGender());
+        String name = mDataset.get(position).getmFirstName() + " " + mDataset.get(position).getmLastName();
+        String region = mDataset.get(position).getmFirstNameRegion() + " / " + mDataset.get(position).getmLastNameRegion();
+        String time = mDataset.get(position).getmFirstNameTimePeriod() + " / " + mDataset.get(position).getmLastNameTimePeriod();
+        String gender = mDataset.get(position).getmFirstNameGender() + " / " + mDataset.get(position).getmLastNameGender();
+        holder.firstName.setText(name);
+        holder.firstNameRegion.setText(region);
+        holder.firstNameTimePeriod.setText(time);
+        holder.firstNameGender.setText(gender);
         Log.i("TEST", "Adding BindViewHolder NameList Listeners");
     }
 

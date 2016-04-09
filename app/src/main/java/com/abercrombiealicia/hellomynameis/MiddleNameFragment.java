@@ -122,7 +122,8 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
         addGenderToArray();
 
         //set mFirstName to first name from singleton
-        mFirstName.setText(NameListSingleton.get(getContext()).getFirstName());
+        String firstNameText = "First Name Choice: " + NameListSingleton.get(getContext()).getFirstName();
+        mFirstName.setText(firstNameText);
 
         //wire up region adapter
         ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, regionArrayList);

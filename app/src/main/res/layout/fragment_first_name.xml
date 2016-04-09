@@ -9,23 +9,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="First Name"
+        android:layout_gravity="center"
+        android:id="@+id/first_name_header"
+        android:layout_marginBottom="5dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/first_name_intro"
-        android:id="@+id/first_name_intro" />
+        android:id="@+id/first_name_intro"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_region_1" />
+        android:id="@+id/spinner_region_1"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_time_1" />
+        android:id="@+id/spinner_time_1"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_gender_1" />
+        android:id="@+id/spinner_gender_1"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,5 +57,6 @@
         android:id="@+id/recycler_view_first_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_marginTop="10dp" />
 </LinearLayout>
