@@ -21,18 +21,21 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import icepick.Icepick;
+import icepick.Icicle;
+
 
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
                                         NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener {
 
-    private DrawerLayout drawerLayout;
+    DrawerLayout drawerLayout;
     private Toolbar toolbar;
-    public  FloatingActionButton fab;
+    public FloatingActionButton fab;
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<ProjectObject> projectNamesArrayList = new ArrayList<>();
-    private String name = "Ali Abercrombie";
+    ArrayList<ProjectObject> projectNamesArrayList = new ArrayList<>();
+    String name = "Ali Abercrombie";
     DBHandler dbHandler;
 
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+       // Icepick.restoreInstanceState(this, savedInstanceState);
         setContentView(R.layout.activity_main);
 
         dbHandler = new DBHandler(this);
@@ -130,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         if (findViewById(R.id.fragmentContainer) != null) {
+
+            if(savedInstanceState != null) {
+                return;
+            }
 
             ProjectFragment projectFragment = new ProjectFragment();
             projectFragment.setArguments(getIntent().getExtras());
@@ -254,6 +263,17 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+       // Icepick.saveInstanceState(this, outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
+    }
 }

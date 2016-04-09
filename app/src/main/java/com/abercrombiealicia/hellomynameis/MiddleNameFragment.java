@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import icepick.Icepick;
+import icepick.Icicle;
+
 /**
  * Created by Spheven on 3/17/2016.
  */
@@ -36,7 +39,7 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
     private ArrayList<String> regionArrayList = new ArrayList<>();
     private ArrayList<String> timeArraylist = new ArrayList<>();
     private ArrayList<String> genderArraylist = new ArrayList<>();
-    private ArrayList<String> namesArrayList = new ArrayList<>();
+    @Icicle ArrayList<String> namesArrayList = new ArrayList<>();
 
     private String mRegion = "";
     private String mTimePeriod = "";
@@ -72,8 +75,9 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
-        ((MainActivity) getActivity()).hideFab();
+
     }
 
     /**
@@ -101,7 +105,7 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
 
         View view = inflater.inflate(R.layout.fragment_middle_name, container, false);
 
-
+        ((MainActivity) getActivity()).hideFab();
 
         //set the basic widgets
         mIntro = (TextView) view.findViewById(R.id.middle_name_intro);
@@ -110,8 +114,6 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
         mSpinnerGender = (Spinner) view.findViewById(R.id.spinner_gender_2);
         mFirstName = (TextView) view.findViewById(R.id.middle_name_first);
         mBtnGetNames = (Button) view.findViewById(R.id.btn_get_middle_names);
-
-
 
 
         final DBHandler dbHandler = new DBHandler(getContext());
@@ -253,4 +255,9 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
         genderArraylist.add("F");
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
 }

@@ -13,7 +13,8 @@
         android:layout_height="56dp"
         android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:id="@+id/authorName"
@@ -25,4 +26,17 @@
             android:layout_marginTop="25dp"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
-    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Recent Projects"
+        android:id="@+id/recentProjects"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textColor="#DAA520" />
+</RelativeLayout>

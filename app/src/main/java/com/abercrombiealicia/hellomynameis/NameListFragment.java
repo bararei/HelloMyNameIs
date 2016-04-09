@@ -79,7 +79,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MainActivity) getActivity()).showFab();
+        //((MainActivity) getActivity()).showFab();
     }
 
     /**
@@ -107,6 +107,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
 
         final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
+        ((MainActivity) getActivity()).showFab();
         //wire up the widgets
         mProjectName = (TextView) view.findViewById(R.id.namelist_project_name);
         mProjectDescription = (TextView) view.findViewById(R.id.namelist_project_description);

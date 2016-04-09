@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import icepick.Icepick;
+import icepick.Icicle;
+
 
 /**
  * Created by Spheven on 3/4/2016.
@@ -39,7 +42,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     private ArrayList<String> regionArrayList = new ArrayList<>();
     private ArrayList<String> timeArraylist = new ArrayList<>();
     private ArrayList<String> genderArraylist = new ArrayList<>();
-    private ArrayList<String> namesArrayList = new ArrayList<>();
+    @Icicle ArrayList<String> namesArrayList = new ArrayList<>();
 
     private String mRegion = "";
     private String mTimePeriod = "";
@@ -75,8 +78,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((MainActivity) getActivity()).hideFab();
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
     }
 
@@ -104,6 +106,8 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         //return super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_first_name, container, false);
+
+        ((MainActivity) getActivity()).hideFab();
 
         //set the basic widgets
         mIntro = (TextView) view.findViewById(R.id.first_name_intro);
@@ -208,15 +212,12 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         switch(parent.getId()) {
             case R.id.spinner_region_1:
                 mRegion = regionArrayList.get(position);
-                //test.setText(mRegion);
                 break;
             case R.id.spinner_time_1:
                 mTimePeriod = timeArraylist.get(position);
-                //test.setText(mTimePeriod);
                 break;
             case R.id.spinner_gender_1:
                 mGender = genderArraylist.get(position);
-               // test.setText(mGender);
                 break;
         }
 
@@ -240,5 +241,9 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         genderArraylist.add("F");
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
 }

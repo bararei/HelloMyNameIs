@@ -84,7 +84,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MainActivity) getActivity()).showFab();
+      //  ((MainActivity) getActivity()).showFab();
     }
 
     /**
@@ -111,6 +111,8 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         //return super.onCreateView(inflater, container, savedInstanceState);
 
         final View view = inflater.inflate(R.layout.fragment_project, container, false);
+
+        ((MainActivity) getActivity()).showFab();
 
         //wire up the widgets
         mIntro = (TextView) view.findViewById(R.id.project_intro);
