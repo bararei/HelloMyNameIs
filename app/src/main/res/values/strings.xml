@@ -2,11 +2,16 @@
     <string name="app_name">HelloMyNameIs</string>
     <string name="first_name_intro">Select all three options from the drop down menus below. </string>
     <string name="middle_name_intro">Middle Name</string>
-    <string name="project_intro">Welcome to My Name Is, the name generator app for writers! Create
-                                projects below and then generate names to store in each of your projects
-                                by region, time period and gender.\n\n Click on the add button to get started
-                                on your first project or tap on one you\'ve already made to see the names
-                                you\'ve already stored or add more. </string>
+    <string name="welcome">Welcome to First &amp; Middle</string>
+    <string name="project_intro">This app allows you to generate first and middle names for characters
+                                based on regions, time periods, and gender. \n\n
+                                Begin by adding a project on the project screen. You can add as many projects as you
+                                like and delete ones you no longer need by long-pressing on them. \n\n
+                                Tapping on a project name will take you to an individual page for that project. There you
+                                can add and delete individual names. \n\n
+                                Select an option from each of the three spinners and tap \'Get Names\' to see
+                                all the names available. Tap a name to choose it. \n\n
+                                Now, enough jabbering. Add your name below to get started! Happy Choosing!</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

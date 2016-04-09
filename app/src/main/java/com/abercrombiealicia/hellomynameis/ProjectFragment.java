@@ -84,7 +84,6 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-      //  ((MainActivity) getActivity()).showFab();
     }
 
     /**
@@ -114,9 +113,6 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
         ((MainActivity) getActivity()).showFab();
 
-        //wire up the widgets
-        mIntro = (TextView) view.findViewById(R.id.project_intro);
-        mMyProject = (TextView) view.findViewById(R.id.my_projects);
 
         DBHandler dbHandler = new DBHandler(getContext());
         projectArrayList = dbHandler.getProjectsFromDatabase();

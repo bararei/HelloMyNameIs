@@ -6,6 +6,8 @@ package com.abercrombiealicia.hellomynameis;
  */
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
+public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> implements AppStatics{
 
 
         private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
@@ -24,7 +26,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         private ArrayList<ProjectObject> projectNamesArrayList;
 
-        private String name;        //String Resource for header View Name
+        private String name; //String Resource for header View Name
+        Context context;
 
 
         // Creating a ViewHolder which extends the RecyclerView View Holder
@@ -34,7 +37,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             int Holderid;
 
             TextView textView;
-            TextView Name;
+            TextView authorName;
 
 
             public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -51,7 +54,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 else{
 
 
-                    Name = (TextView) itemView.findViewById(R.id.authorName);         // Creating Text View object from header.xml for name
+                    authorName = (TextView) itemView.findViewById(R.id.authorName);         // Creating Text View object from header.xml for name
                     Holderid = 0;                                                // Setting holder id = 0 as the object being populated are of type header view
                 }
             }
@@ -61,11 +64,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
 
 
-        DrawerAdapter(ArrayList<ProjectObject> projectNames,String Name){
+        DrawerAdapter(ArrayList<ProjectObject> projectNames){
 
             projectNamesArrayList = projectNames;
-
-            name = Name;
 
         }
 
@@ -109,13 +110,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public void onBindViewHolder(DrawerAdapter.ViewHolder holder, int position) {
             if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
                 // position by 1 and pass it to the holder while setting the text and image
-                holder.textView.setText(projectNamesArrayList.get(position-1).getProjectName()); // Setting the
-                // Text with the
-                // array of our Titles
+                holder.textView.setText(projectNamesArrayList.get(position - 1).getProjectName());
+
+
             }
             else{
                 // Similarly we set the resources for header view
-                holder.Name.setText(name);
+                SharedPreferences sharedPreferences = holder.authorName.getContext().getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
+                String name = sharedPreferences.getString(AUTHOR_NAME_KEY,"Your Name");
+                holder.authorName.setText(name);
             }
         }
 

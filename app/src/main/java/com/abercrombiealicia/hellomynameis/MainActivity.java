@@ -1,5 +1,6 @@
 package com.abercrombiealicia.hellomynameis;
 
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -26,7 +30,8 @@ import icepick.Icicle;
 
 
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
-                                        NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener {
+                                        NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener,
+                                        IntroHelpFragment.OnSubmitListener, AppStatics{
 
     DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     ArrayList<ProjectObject> projectNamesArrayList = new ArrayList<>();
     String name = "Ali Abercrombie";
     DBHandler dbHandler;
+    SharedPreferences sharedPreferences;
 
 
 
@@ -57,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
 
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerViewDrawer); // Assigning the RecyclerView Object to the xml View
         mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
-        mAdapter = new DrawerAdapter(projectNamesArrayList, name);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        mAdapter = new DrawerAdapter(projectNamesArrayList);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
@@ -65,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         mLayoutManager = new LinearLayoutManager(this);                 // Creating a layout Manager
         mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -129,28 +136,40 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-       // navigationView = (NavigationView) findViewById(R.id.nav_view);
-       // navigationView.setNavigationItemSelectedListener(this);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        if (findViewById(R.id.fragmentContainer) != null) {
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
 
-            if(savedInstanceState != null) {
-                return;
-            }
-
-            ProjectFragment projectFragment = new ProjectFragment();
-            projectFragment.setArguments(getIntent().getExtras());
+        if (sharedPreferences.getBoolean(FIRST_RUN, true)) {
+            IntroHelpFragment introHelpFragment = new IntroHelpFragment();
+            introHelpFragment.setArguments(getIntent().getExtras());
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, projectFragment)
-                    .addToBackStack("ProjectFragment")
+                    .add(R.id.fragmentContainer, introHelpFragment)
                     .commit();
+
+            sharedPreferences.edit().putBoolean(FIRST_RUN, false).commit();
+
+        } else {
+
+            if (findViewById(R.id.fragmentContainer) != null) {
+
+                if (savedInstanceState != null) {
+                    return;
+                }
+
+                ProjectFragment projectFragment = new ProjectFragment();
+                projectFragment.setArguments(getIntent().getExtras());
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragmentContainer, projectFragment)
+                        .addToBackStack("ProjectFragment")
+                        .commit();
+            }
+
         }
-
-
     }
 
     @Override
@@ -200,6 +219,22 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         transaction.replace(R.id.fragmentContainer, nameListFragment);
         transaction.addToBackStack("NameList");
         transaction.commit();
+    }
+
+    @Override
+    public void onSubmitClickIntroHelp() {
+
+        TextView mAuthorName = (TextView) findViewById(R.id.authorName);
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
+        mAuthorName.setText(sharedPreferences.getString(AUTHOR_NAME_KEY,"Your Name" ));
+
+        ProjectFragment projectFragment = new ProjectFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, projectFragment);
+        transaction.addToBackStack("ProjectFragment");
+        transaction.commit();
+
     }
 
 
@@ -256,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     public void updateDrawer() {
         projectNamesArrayList = dbHandler.getProjectsForDrawerList();
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new DrawerAdapter(projectNamesArrayList, name);
+        mAdapter = new DrawerAdapter(projectNamesArrayList);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -276,4 +311,6 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
 
 
     }
+
+
 }
