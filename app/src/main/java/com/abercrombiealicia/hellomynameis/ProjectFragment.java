@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -185,7 +186,7 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                 final View view1 = inflater.inflate(R.layout.dialog_add_project, null);
                 builder.setView(view1);
 
-                builder.setTitle("Add a New Project");
+                builder.setTitle( Html.fromHtml("<font color='#DAA520'>Add A New Project</font>"));
 
                 builder.setPositiveButton("Add Project", new DialogInterface.OnClickListener() {
                     @Override

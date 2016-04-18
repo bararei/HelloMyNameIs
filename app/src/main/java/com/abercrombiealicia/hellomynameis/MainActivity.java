@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -344,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         final View view1 = inflater.inflate(R.layout.dialog_change_name, null);
         builder.setView(view1);
 
-        builder.setTitle("What's Your New Name?");
+        builder.setTitle( Html.fromHtml("<font color='#DAA520'>What's Your New Name?</font>"));
 
         builder.setPositiveButton("Change My Name!", new DialogInterface.OnClickListener() {
             @Override
