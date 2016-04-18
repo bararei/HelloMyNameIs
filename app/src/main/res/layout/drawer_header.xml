@@ -19,24 +19,17 @@
         <TextView
             android:id="@+id/authorName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ali Abercrombie"
+            android:layout_height="45dp"
+            android:text="Bruce Wayne"
             android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginTop="25dp"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Recent Projects"
-        android:id="@+id/recentProjects"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:textColor="#DAA520" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
+
 </RelativeLayout>

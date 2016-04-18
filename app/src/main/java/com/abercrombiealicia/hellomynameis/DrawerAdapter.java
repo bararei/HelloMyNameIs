@@ -22,7 +22,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
         // IF the view under inflation and population is header or Item
-        private static final int TYPE_ITEM = 1;
+
+        private static final int TYPE_HOME = 1;
+
+        private static final int TYPE_ITEM = 2;
 
         private ArrayList<ProjectObject> projectNamesArrayList;
 
@@ -38,6 +41,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
             TextView textView;
             TextView authorName;
+            TextView mHome;
 
 
             public ViewHolder(View itemView,int ViewType) {                 // Creating ViewHolder Constructor with View and viewType As a parameter
@@ -49,10 +53,14 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 if(ViewType == TYPE_ITEM) {
                     textView = (TextView) itemView.findViewById(R.id.drawerText); // Creating TextView object with the id of textView from item_row.xml
 
-                    Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
+                    Holderid = 2;                                               // setting holder id as 1 as the object being populated are of type item row
                 }
-                else{
+                else if (ViewType == TYPE_HOME) {
 
+                    mHome = (TextView) itemView.findViewById(R.id.drawerHomeText);
+
+                    Holderid = 1;
+                } else {
 
                     authorName = (TextView) itemView.findViewById(R.id.authorName);         // Creating Text View object from header.xml for name
                     Holderid = 0;                                                // Setting holder id = 0 as the object being populated are of type header view
@@ -98,6 +106,12 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 return vhHeader; //returning the object created
 
 
+            } else if (viewType == TYPE_HOME) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawer_home,parent,false); //Inflating the layout
+                ViewHolder vhHome = new ViewHolder(v, viewType);
+
+                return vhHome;
+
             }
             return null;
 
@@ -108,11 +122,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         // which view type is being created 1 for item row
         @Override
         public void onBindViewHolder(DrawerAdapter.ViewHolder holder, int position) {
-            if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
+            if(holder.Holderid == 2) {                              // as the list view is going to be called after the header view so we decrement the
                 // position by 1 and pass it to the holder while setting the text and image
-                holder.textView.setText(projectNamesArrayList.get(position - 1).getProjectName());
+                holder.textView.setText(projectNamesArrayList.get(position - 2).getProjectName());
 
 
+            } else if (holder.Holderid == 1) {
+                holder.mHome.setText("All Projects");
             }
             else{
                 // Similarly we set the resources for header view
@@ -125,7 +141,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         // This method returns the number of items present in the list
         @Override
         public int getItemCount() {
-            return projectNamesArrayList.size()+1; // the number of items in the list will be +1 the titles including the header view.
+            return projectNamesArrayList.size()+2; // the number of items in the list will be +1 the titles including the header view.
         }
 
 
@@ -134,12 +150,18 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public int getItemViewType(int position) {
             if (isPositionHeader(position))
                 return TYPE_HEADER;
+            else if (isPositionHome(position))
+                return TYPE_HOME;
 
             return TYPE_ITEM;
         }
 
         private boolean isPositionHeader(int position) {
             return position == 0;
+        }
+
+        private boolean isPositionHome(int position) {
+            return position == 1;
         }
 
     }

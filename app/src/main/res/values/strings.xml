@@ -29,4 +29,6 @@
                                 Select an option from each of the three spinners on the first or middle name pages and tap \'Get Names\' to see
                                 all the names available. Tap a name to choose it. After tapping the middle name
                                 you\'ll be taken back to the individual project screen.</string>
+    <string name="hint_change_name">Type your new name here</string>
+    <string name="toast_change_name">Head on over to Settings to change your name!</string>
 </resources>

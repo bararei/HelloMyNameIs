@@ -1,5 +1,7 @@
 package com.abercrombiealicia.hellomynameis;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,10 +16,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;
     ArrayList<ProjectObject> projectNamesArrayList = new ArrayList<>();
-    String name = "Ali Abercrombie";
     DBHandler dbHandler;
     SharedPreferences sharedPreferences;
 
@@ -88,12 +91,24 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
 
                     //Log.i("LOG", " Clicked on Item " + child);
                     if (recyclerView.getChildPosition(child) == 0 ) {
-                        Toast.makeText(MainActivity.this, "Head on over to Settings to add your name!", Toast.LENGTH_LONG).show();
+
+                        Toast.makeText(MainActivity.this, R.string.toast_change_name, Toast.LENGTH_LONG).show();
+
+                    } else if (recyclerView.getChildPosition(child) == 1) {
+
+                        if (findViewById(R.id.fragmentContainer)!= null) {
+                            ProjectFragment projectFragment = new ProjectFragment();
+
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragmentContainer, projectFragment);
+                            transaction.addToBackStack("ProjectList");
+                            transaction.commit();
+                        }
                     } else {
                         NameListSingleton.get(MainActivity.this).setProjectName(projectNamesArrayList
-                                .get(recyclerView.getChildPosition(child) - 1).getProjectName());
+                                .get(recyclerView.getChildPosition(child) - 2).getProjectName());
                         NameListSingleton.get(MainActivity.this).setmProjectDescription
-                                (projectNamesArrayList.get(recyclerView.getChildPosition(child) - 1)
+                                (projectNamesArrayList.get(recyclerView.getChildPosition(child) - 2)
                                         .getProjectDescription());
                         Log.i("LOG", "Singleton info is " + NameListSingleton.get(MainActivity.this)
                                 .getProjectName());
@@ -226,6 +241,14 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         transaction.addToBackStack("ProjectFragment");
         transaction.commit();
 
+        projectNamesArrayList = dbHandler.getProjectsForDrawerList();
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new DrawerAdapter(projectNamesArrayList);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.notifyDataSetChanged();
+
     }
 
 
@@ -255,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
 
         switch(item.getItemId()) {
             case R.id.action_settings:
+                createDialog();
                 return true;
             case R.id.help:
                 HelpFragment helpFragment = new HelpFragment();
@@ -311,6 +335,54 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
+    }
+
+    public void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = getLayoutInflater();
+        final View view1 = inflater.inflate(R.layout.dialog_change_name, null);
+        builder.setView(view1);
+
+        builder.setTitle("What's Your New Name?");
+
+        builder.setPositiveButton("Change My Name!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_FILE_NAME, 0);
+                EditText newName = (EditText) view1.findViewById(R.id.input_change_name);
+                String mNewName = newName.getText().toString();
+
+                if (mNewName.isEmpty()) {
+                    return;
+                }
+
+                //add new name to shared preferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString(AUTHOR_NAME_KEY, mNewName);
+                editor.commit();
+
+                projectNamesArrayList = dbHandler.getProjectsForDrawerList();
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mAdapter = new DrawerAdapter(projectNamesArrayList);
+
+                mRecyclerView.setAdapter(mAdapter);
+
+                mAdapter.notifyDataSetChanged();
+
+
+            }
+        });
+
+        builder.setNegativeButton("Never Mind", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
     }
 
 
