@@ -25,7 +25,12 @@ import icepick.Icicle;
 
 
 /**
- * Created by Spheven on 3/4/2016.
+ * @author Ali Abercrombie
+ * @created 3/4/2016
+ * @version 1.0.0
+ *
+ * This fragment displays the first name selection options available from the database based on region,
+ * time period and gender selections by the user.
  */
 public class FirstNameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -50,12 +55,18 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
 
     OnSubmitListener mCallback;
 
-    //Container activity must implement this interface so that the fragment can deliver information
+    /**
+     * MainActivity implements this interface so the fragment can deliver information.
+     */
     public interface OnSubmitListener {
         void onSubmitClickFirstName();
     }
 
 
+    /**
+     * Used to make sure MainActivity has implemented the OnSubmitListener callback.
+     * @param activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -71,9 +82,10 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     /**
-     * Perform initialization of all fragments and loaders.
+     * Perform initialization of all fragments and loaders. Calls Icepick library to deal with all
+     * bundling and savedInstanceState handling.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState the savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,12 +96,9 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
 
     /**
      * Called to have the fragment instantiate its user interface view.
-     * This is optional, and non-graphical fragments can return null (which
-     * is the default implementation).  This will be called between
-     * {@link #onCreate(Bundle)} and {@link (Bundle)}.
-     * <p/>
-     * <p>If you return a View from here, you will later be called in
-     * {@link} when the view is being released.
+     * Includes 3 spinner adapters, button, and recycler view for names. Information from database is
+     * used to populate spinners, user makes selection from spinners and selection is then sent back to
+     * the database to populate the recycler view.
      *
      * @param inflater           The LayoutInflater object that can be used to inflate
      *                           any views in the fragment,
@@ -97,16 +106,16 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
      *                           UI should be attached to.  The fragment should not add the view itself,
      *                           but this can be used to generate the LayoutParams of the view.
      * @param savedInstanceState If non-null, this fragment is being re-constructed
-     *                           from a previous saved state as given here.
-     * @return Return the View for the fragment's UI, or null.
+     *                           from a previous saved state.
+     * @return view
      */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_first_name, container, false);
 
+        //hides the floating action button
         ((MainActivity) getActivity()).hideFab();
 
         //set the basic widgets
@@ -118,11 +127,9 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         mBtnGetNames = (Button) view.findViewById(R.id.btn_get_first_names);
 
 
-
-
         final DBHandler dbHandler = new DBHandler(getContext());
 
-        //set regionArrayList equal to localArrayList
+        //set arrayLists from database/method
         regionArrayList = dbHandler.getRegion();
         timeArraylist = dbHandler.getTimePeriod();
         addGenderToArray();
@@ -150,6 +157,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         mSpinnerGender.setOnItemSelectedListener(this);
 
 
+        //gets the names from the database and populates the namesArrayList if all spinners are set
         mBtnGetNames.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mRegion != "" && mTimePeriod != "" && mGender != "") {
@@ -164,7 +172,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
             }
         });
 
-        //recycler view stuff
+        //sets the recycler view
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_first_name);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -175,15 +183,13 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
-        //set onclick adapter
+        //set onclick adapter. Sets first name in singleton and then invokes callback interface.
         ((NameFragmentAdapter) mAdapter).setOnItemClickListener(new
                 NameFragmentAdapter.MyClickListener() {
                     @Override
                     public void onItemClick(int position, View v) {
-                        Log.i("LOG", " Clicked on Item " + position);
                         NameListSingleton.get(getContext()).setFirstName(namesArrayList.get
                                 (position));
-                        Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getFirstName());
 
                         mCallback.onSubmitClickFirstName();
                     }
@@ -193,13 +199,8 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     /**
-     * <p>Callback method to be invoked when an item in this view has been
-     * selected. This callback is invoked only when the newly selected
-     * position is different from the previously selected position or if
-     * there was no selected item.</p>
-     * <p/>
-     * Impelmenters can call getItemAtPosition(position) if they need to access the
-     * data associated with the selected item.
+     * Callback method to be invoked when an item in this view has been
+     * selected. Set to switch based on which spinner has been selected.
      *
      * @param parent   The AdapterView where the selection happened
      * @param view     The view within the AdapterView that was clicked
@@ -236,11 +237,19 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
 
     }
 
+    /**
+     * Since there are only two options for gender, the gender array is created here instead of from
+     * a database query.
+     */
     public void addGenderToArray() {
         genderArraylist.add("M");
         genderArraylist.add("F");
     }
 
+    /**
+     * Called when the view is changed or the fragment is destroyed. Uses Icepick to save the instance state.
+     * @param outState saved information
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

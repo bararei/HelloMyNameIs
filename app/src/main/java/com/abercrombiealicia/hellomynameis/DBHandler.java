@@ -18,7 +18,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Created by Spheven on 3/2/2016.
+ * @author Ali Abercrombie
+ * @created 3/2/2016
+ * @version 1.0.0
+ *
+ * This is the DBHandler class. It handles all methods for inputting and receiving information from
+ * the local 'hellomynameisDB.db'. The information for the database is stored in a csv file in assets.
  */
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -42,15 +47,20 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_NAMELIST_NAME_ID1 = "name_id1";
     private static final String COLUMN_NAMELIST_NAME_ID2 = "name_id2";
 
+    /**
+     * Constructor for DBHandler. Creates a writable db object and calls addNamesToDatabase() every
+     * time currently. Need to work on better way of doing this for future release.
+     * @param context the context
+     */
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
-        onUpgrade(db, 1, DATABASE_VERSION);
+        //onUpgrade(db, 1, DATABASE_VERSION);
         addNamesToDatabase(context, db);
     }
     /**
-     * Called when the database is created for the first time. This is where the
-     * creation of tables and the initial population of the tables should happen.
+     * Called when the database is created for the first time. Creates projects, names, and namelist
+     * tables.
      *
      * @param db The database.
      */
@@ -88,12 +98,16 @@ public class DBHandler extends SQLiteOpenHelper {
                 + "(" + COLUMN_NAME_ID + "))";
 
         db.execSQL(CREATE_NAMELIST_TABLE);
-        Log.d("CSVParser", "Tables created");
 
 
 
     }
 
+    /**
+     * Parses the names from the csv file in assets and adds them to the names table.
+     * @param context the context
+     * @param db the database
+     */
     public void addNamesToDatabase (Context context, SQLiteDatabase db) {
 
         String mCSVFile = "names_database.csv";
@@ -102,7 +116,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
         try {
             inStream = manager.open(mCSVFile);
-            Log.d("CSVParser", "CSVFile opened");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +128,6 @@ public class DBHandler extends SQLiteOpenHelper {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] columns = line.split(",");
                 if (columns.length != 5) {
-                    Log.d("CSVParser", "Skipping Bad CSV Row");
                     continue;
                 }
                 ContentValues cv = new ContentValues();
@@ -124,7 +136,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 cv.put(COLUMN_NAME_REGION, columns[2].trim());
                 cv.put(COLUMN_NAME_TIMEPERIOD, columns[3].trim());
                 cv.put(COLUMN_NAME_GENDER, columns[4].trim());
-                Log.d("CSVParser", columns[1]);
                 db.insert(TABLE_NAMES, null, cv);
             }
         } catch (IOException e) {
@@ -135,20 +146,8 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Called when the database needs to be upgraded. The implementation
-     * should use this method to drop tables, add tables, or do anything else it
-     * needs to upgrade to the new schema version.
-     * <p/>
-     * <p>
-     * The SQLite ALTER TABLE documentation can be found
-     * <a href="http://sqlite.org/lang_altertable.html">here</a>. If you add new columns
-     * you can use ALTER TABLE to insert them into a live table. If you rename or remove columns
-     * you can use ALTER TABLE to rename the old table, then create the new table and then
-     * populate the new table with the contents of the old table.
-     * </p><p>
-     * This method executes within a transaction.  If an exception is thrown, all changes
-     * will automatically be rolled back.
-     * </p>
+     * Called when the database needs to be upgraded. Currently used to delete and recreate the names
+     * table when new names are added.
      *
      * @param db         The database.
      * @param oldVersion The old database version.
@@ -169,6 +168,11 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_NAMES_TABLE);
     }
 
+    /**
+     * Returns an ArrayList of all available regions from the names table. Used in the FirstNameFragment
+     * and MiddleNameFragment.
+     * @return regionArrayList
+     */
     public ArrayList<String> getRegion() {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -186,6 +190,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return regionArrayList;
     }
 
+    /**
+     * Returns an ArrayList of all available time periods from the names table. Used in the FirstNameFragment
+     * and MiddleNameFragment.
+     * @return timeArrayList
+     */
     public ArrayList<String> getTimePeriod() {
 
         SQLiteDatabase db = getReadableDatabase();
@@ -203,6 +212,14 @@ public class DBHandler extends SQLiteOpenHelper {
         return timeArrayList;
     }
 
+    /**
+     * Returns an ArrayList of available names in the namelist table based on the region, time period and gender passed in.
+     * Used in the FirstNameFragment and MiddleNameFragment.
+     * @param region region used for selection
+     * @param time time period used for selection
+     * @param gender gender used for selection
+     * @return allNames
+     */
     public ArrayList<String> getNamesFromDatabase(String region, String time, String gender) {
 
         ArrayList<String> allNames = new ArrayList<>();
@@ -221,6 +238,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return allNames;
     }
 
+    /**
+     * Adds a new project to the database
+     * @param projectName the name of the project
+     * @param projectDescription the description of the project
+     */
     public void addProjectToDatabase(String projectName, String projectDescription) {
 
         ContentValues values = new ContentValues();
@@ -233,6 +255,11 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Gets all projects from the projects table, adds them as ProjectObjects to the allProjects
+     * ArrayList, and returns that ArrayList. Used in ProjectFragment.
+     * @return allProjects
+     */
     public ArrayList<ProjectObject> getProjectsFromDatabase() {
         ArrayList<ProjectObject> allProjects = new ArrayList<>();
 
@@ -255,6 +282,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return allProjects;
     }
 
+    /**
+     * Uses the projectName to get the projectID from the projects table.
+     * @param projectName the name of the project
+     * @return projectID
+     */
     public int getProjectId(String projectName) {
         int projectID = 0;
 
@@ -279,6 +311,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return projectID;
     }
 
+    /**
+     * Uses the name itself to find the nameID from the names table.
+     * @param name the name itself in the names table
+     * @return nameID
+     */
     public int getNameId(String name) {
         int nameID = 0;
 
@@ -296,12 +333,18 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
 
-      //  Log.d("TEST", name);
         cursor.close();
         db.close();
         return nameID;
     }
 
+    /**
+     * Adds a new namelist item to the nameslist table. Also used to readd a project if a user changes
+     * their mind about deleting it.
+     * @param projectID the projectID
+     * @param firstNameID the firstNameID
+     * @param middleNameID the middleNameID
+     */
     public void addNameListToDatabase(int projectID, int firstNameID, int middleNameID) {
 
         ContentValues values = new ContentValues();
@@ -317,6 +360,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Returns all rows in the nameslist table that have the @param projectID. Then uses those results
+     * to get name information from the names table and add it to a NameListObject ArrayList. Used in the NameListFragment.
+     * @param projectID the ID of the desired project
+     * @return nameListObjects
+     */
     public ArrayList<NameListObject> getNameListFromDatabase(int projectID) {
         ArrayList<NameListObject> nameListObjects = new ArrayList<>();
         int nameID1;
@@ -331,7 +380,6 @@ public class DBHandler extends SQLiteOpenHelper {
             while (cursor.moveToNext()) {
                 nameID1 = cursor.getInt(1);
                 nameID2 = cursor.getInt(2);
-                Log.d("derp", String.valueOf(nameID1));
 
                 NameListObject nameListObject = new NameListObject();
                 Cursor cursor1;
@@ -378,24 +426,38 @@ public class DBHandler extends SQLiteOpenHelper {
         return nameListObjects;
     }
 
+    /**
+     * Removes a namelist item from the database
+     * @param projectID projectID of item to be removed
+     * @param nameID1 nameID1 of item to be removed
+     * @param nameID2 nameID2 of item to be removed
+     */
     public void deleteNamesListFromDatabase(int projectID, int nameID1, int nameID2) {
         SQLiteDatabase db = getWritableDatabase();
 
         db.delete(TABLE_NAMELIST, COLUMN_NAMELIST_PROJECT_ID + " = " + projectID + " AND " + COLUMN_NAMELIST_NAME_ID1 + " = " + nameID1
                     + " AND " + COLUMN_NAMELIST_NAME_ID2 + " = " + nameID2, null);
         db.close();
-        Log.d("derp", "deleted" + String.valueOf(nameID1));
 
     }
 
+    /**
+     * Removes a project from the database
+     * @param projectID ID of project to be removed
+     */
     public void deleteProjectFromDatabase (int projectID) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_PROJECTS, COLUMN_PROJECT_ID + " = " + projectID, null);
         db.close();
 
-        Log.d("derp", "deleted" + String.valueOf(projectID));
     }
 
+    /**
+     * Readds a project to the database if a user changes their mind about deleting it.
+     * @param projectID ID of project to be readded
+     * @param projectName name of project to be readded
+     * @param projectDescription description of project to be readded
+     */
     public void reAddProjectToDatabase(int projectID, String projectName, String projectDescription) {
 
         ContentValues values = new ContentValues();
@@ -408,10 +470,13 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_PROJECTS, null, values);
         db.close();
 
-        Log.d("derp", "readded" + String.valueOf(projectName));
     }
 
-
+    /**
+     * Gets the most recent 5 projects for the navigation drawer list. Gets all projects from the projects table,
+     * adds them as ProjectObjects to the allProjects ArrayList, and returns that ArrayList.
+     * @return allProjects
+     */
     public ArrayList<ProjectObject> getProjectsForDrawerList() {
         ArrayList<ProjectObject> allProjects = new ArrayList<>();
 
