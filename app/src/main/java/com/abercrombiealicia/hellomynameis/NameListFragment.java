@@ -22,7 +22,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by Spheven on 3/19/2016.
+ * @author Ali Abercrombie
+ * Created on 3/19/2016.
+ * @version 1.0.0
+ *
+ * This fragment displays the title and description of each individual project and the names attached to it.
  */
 public class NameListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -35,9 +39,9 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     private NameListDatabaseObject nameListDatabaseObject;
     private ArrayList<NameListObject> mNamesListArrayList = new ArrayList<>();
 
-
-
-
+    /**
+     * MainActivity implements this interface so the fragment can deliver information.
+     */
     OnSubmitListener mCallback;
 
 
@@ -46,7 +50,10 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         void onSubmitClickNameList();
     }
 
-
+    /**
+     * Used to make sure MainActivity has implemented the OnSubmitListener callback.
+     * @param activity the activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -62,34 +69,20 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     /**
-     * Called to do initial creation of a fragment.  This is called after
-     * {@link #onAttach(Activity)} and before
-     * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * <p/>
-     * <p>Note that this can be called while the fragment's activity is
-     * still in the process of being created.  As such, you can not rely
-     * on things like the activity's content view hierarchy being initialized
-     * at this point.  If you want to do work once the activity itself is
-     * created, see {@link #onActivityCreated(Bundle)}.
+     * Perform initialization of all fragments and loaders.
      *
-     * @param savedInstanceState If the fragment is being re-created from
-     *                           a previous saved state, this is the state.
+     * @param savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //((MainActivity) getActivity()).showFab();
     }
 
     /**
      * Called to have the fragment instantiate its user interface view.
-     * This is optional, and non-graphical fragments can return null (which
-     * is the default implementation).  This will be called between
-     * {@link #onCreate(Bundle)} and {@link #onActivityCreated(Bundle)}.
-     * <p/>
-     * <p>If you return a View from here, you will later be called in
-     * {@link #onDestroyView} when the view is being released.
+     * Sets the view, wires up and sets the text widgets from the singleton, and sets the recyclerView.
+     * Sets onClickListener behavior for adapter. Sets behavior for Floating Action Button. Finally,
+     * calls mCallback.
      *
      * @param inflater           The LayoutInflater object that can be used to inflate
      *                           any views in the fragment,
@@ -103,7 +96,6 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
 
         final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
@@ -117,22 +109,23 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         mProjectName.setText("Project Name: " + NameListSingleton.get(getContext()).getProjectName());
         mProjectDescription.setText("Project Description: " + NameListSingleton.get(getContext()).getmProjectDescription());
 
-        //RecyclerView stuff... needs to be more robust, just a placeholder
+        //set RecyclerView
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_namelist);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        //Set arraylist for adapter
         createNamesArrayList();
-        for(NameListObject object : mNamesListArrayList) {
-            String item = object.getmFirstName();
-        //    Log.i("WTF", item);
-        }
+
+        //finish setting recyclerView
         mAdapter = new NameListFragmentAdapter(mNamesListArrayList);
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
+        //set onClickListener behavior
         ((NameListFragmentAdapter) mAdapter).setOnItemClickListener(new NameListFragmentAdapter.MyClickListener() {
             @Override
             public void onItemClick(final int position, View v) {
@@ -140,7 +133,9 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
                 final NameListObject item;
                 item = mNamesListArrayList.get(position);
 
+                //save name to object and delete from database
                 deleteNameFromList(position);
+                //delete from arraylist and update adapter
                 removeAtPosition(position);
 
                 Snackbar snackbar = Snackbar
@@ -149,6 +144,8 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
                             @Override
                             public void onClick(View v) {
 
+                                //if they undo...get a database instance, get names from database object, add them back in,
+                                //add item back to array at same position, let the recyclerView know it's been updated.
                                 DBHandler dbHandler = new DBHandler(getContext());
                                 dbHandler.addNameListToDatabase(nameListDatabaseObject.getProjectID(),
                                         nameListDatabaseObject.getNameID1(), nameListDatabaseObject.getNameID2());
@@ -165,6 +162,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         });
 
 
+        //Do mCallback when FAB is clicked
         MainActivity mainActivity = (MainActivity)getActivity();
         mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 
@@ -213,6 +211,11 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
+    /**
+     * Sets up the namesArrayList. Creates an instance of DBHandler, gets the project name from the
+     * singleton, then gets the project ID from the database and adds all names with that projectID to
+     * the arrayList.
+     */
     public void createNamesArrayList() {
         //Set up the arraylist stuff
         DBHandler dbHandler = new DBHandler(getContext());
@@ -221,6 +224,10 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         mNamesListArrayList = dbHandler.getNameListFromDatabase(projectID);
     }
 
+    /**
+     * Saves the nameList item to a temporary object and then deletes it from the database.
+     * @param position the position of the item in the mNamesListArrayList
+     */
     public void deleteNameFromList(int position) {
 
         DBHandler dbHandler = new DBHandler(getContext());
@@ -236,12 +243,23 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         dbHandler.deleteNamesListFromDatabase(projectID, firstNameID, middleNameID);
     }
 
+    /**
+     * Lets the recyclerView adapter know the item has been removed and at what position
+     * @param position the position of the item to be removed
+     */
     public void removeAtPosition(int position) {
         mNamesListArrayList.remove(position);
         mAdapter.notifyItemRemoved(position);
         mAdapter.notifyItemRangeChanged(position, mNamesListArrayList.size());
     }
 
+    /**
+     * Instantiates a nameListDatabaseObject and then saves the deleted object's data to it in case
+     * the user decides to undo the deletion.
+     * @param projectID the projectID of the deleted item
+     * @param firstNameID the nameID1 of the deleted item
+     * @param middleNameID the nameID2 of the deleted item
+     */
     public void saveNameToObject(int projectID, int firstNameID, int middleNameID) {
         nameListDatabaseObject = new NameListDatabaseObject();
         nameListDatabaseObject.setProjectID(projectID);

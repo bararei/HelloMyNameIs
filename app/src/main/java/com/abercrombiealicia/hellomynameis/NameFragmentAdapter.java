@@ -9,7 +9,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 /**
- * Created by Spheven on 3/6/2016.
+ * @author Ali Abercrombie
+ * Created on 3/6/2016.
+ * @version 1.0.0
+ *
+ * Adapter for the First and Middle Name Fragments. Takes in an arrayList of Strings. Also implements
+ * a MyClickListener.
  */
 
 
@@ -28,7 +33,6 @@ public class NameFragmentAdapter extends RecyclerView
         public DataObjectHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.nameItem);
-            Log.i("TEST", "Adding Listener");
             itemView.setOnClickListener(this);
         }
 

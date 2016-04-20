@@ -1,7 +1,12 @@
 package com.abercrombiealicia.hellomynameis;
 
 /**
- * Created by Spheven on 3/25/2016.
+ * @author Ali Abercrombie
+ * Created on 3/25/2016.
+ * @version 1.0.0
+ *
+ * An object that holds all the information about a set of two names, including region, gender and time period.
+ * Makes an arrayList for the NameListFragment.
  */
 public class NameListObject {
 
@@ -9,73 +14,137 @@ public class NameListObject {
     private String mFirstNameRegion;
     private String mFirstNameTimePeriod;
     private String mFirstNameGender;
-    private String mLastName;
-    private String mLastNameRegion;
-    private String mLastNameTimePeriod;
-    private String mLastNameGender;
+    private String mMiddleName;
+    private String mMiddleNameRegion;
+    private String mMiddleNameTimePeriod;
+    private String mMiddleNameGender;
 
+    /**
+     * getter for mFirstNameRegion
+     * @return mFirstNameRegion
+     */
     public String getmFirstNameRegion() {
         return mFirstNameRegion;
     }
 
+    /**
+     * setter for mFirstNameRegion
+     * @param mFirstNameRegion  mFirstNameRegion
+     */
     public void setmFirstNameRegion(String mFirstNameRegion) {
         this.mFirstNameRegion = mFirstNameRegion;
     }
 
+    /**
+     * getter for mFirstName
+     * @return mFirstName
+     */
     public String getmFirstName() {
         return mFirstName;
     }
 
+    /**
+     * setter for mFirstName
+     * @param mFirstName mFirstName
+     */
     public void setmFirstName(String mFirstName) {
         this.mFirstName = mFirstName;
     }
 
+    /**
+     * getter for mFirstNameGender
+     * @return mFirstNameGender
+     */
     public String getmFirstNameGender() {
         return mFirstNameGender;
     }
 
+    /**
+     * setter for mFirstNameGender
+     * @param mFirstNameGender mFirstNameGender
+     */
     public void setmFirstNameGender(String mFirstNameGender) {
         this.mFirstNameGender = mFirstNameGender;
     }
 
+    /**
+     * getter for mFirstNameTimePeriod
+     * @return mFirstNameTimePeriod
+     */
     public String getmFirstNameTimePeriod() {
         return mFirstNameTimePeriod;
     }
 
+    /**
+     * setter for mFirstNameTimePeriod
+     * @param mFirstNameTimePeriod mFirstNameTimePeriod
+     */
     public void setmFirstNameTimePeriod(String mFirstNameTimePeriod) {
         this.mFirstNameTimePeriod = mFirstNameTimePeriod;
     }
 
-    public String getmLastName() {
-        return mLastName;
+    /**
+     * getter for mMiddleName
+     * @return mMiddleName
+     */
+    public String getmMiddleName() {
+        return mMiddleName;
     }
 
-    public void setmLastName(String mLastName) {
-        this.mLastName = mLastName;
+    /**
+     * setter for mMiddleName
+     * @param mMiddleName mMiddleName
+     */
+    public void setmMiddleName(String mMiddleName) {
+        this.mMiddleName = mMiddleName;
     }
 
-    public String getmLastNameGender() {
-        return mLastNameGender;
+    /**
+     * getter for mMiddleNameGender
+     * @return mMiddleNameGender
+     */
+    public String getmMiddleNameGender() {
+        return mMiddleNameGender;
     }
 
-    public void setmLastNameGender(String mLastNameGender) {
-        this.mLastNameGender = mLastNameGender;
+    /**
+     * setter for mMiddleNameGender
+     * @param mMiddleNameGender mMiddleNameGender
+     */
+    public void setmMiddleNameGender(String mMiddleNameGender) {
+        this.mMiddleNameGender = mMiddleNameGender;
     }
 
-    public String getmLastNameRegion() {
-        return mLastNameRegion;
+    /**
+     * getter for mMiddleNameRegion
+     * @return mMiddleNameRegion
+     */
+    public String getmMiddleNameRegion() {
+        return mMiddleNameRegion;
     }
 
-    public void setmLastNameRegion(String mLastNameRegion) {
-        this.mLastNameRegion = mLastNameRegion;
+    /**
+     * setter for mMiddleNameRegion
+     * @param mMiddleNameRegion mMiddleNameRegion
+     */
+    public void setmMiddleNameRegion(String mMiddleNameRegion) {
+        this.mMiddleNameRegion = mMiddleNameRegion;
     }
 
-    public String getmLastNameTimePeriod() {
-        return mLastNameTimePeriod;
+    /**
+     * getter for mMiddleNameTimePeriod
+     * @return mMiddleNameTimePeriod
+     */
+    public String getmMiddleNameTimePeriod() {
+        return mMiddleNameTimePeriod;
     }
 
-    public void setmLastNameTimePeriod(String mLastNameTimePeriod) {
-        this.mLastNameTimePeriod = mLastNameTimePeriod;
+    /**
+     * setter for mMiddleNameTimePeriod
+     * @param mMiddleNameTimePeriod mMiddleNameTimePeriod
+     */
+    public void setmMiddleNameTimePeriod(String mMiddleNameTimePeriod) {
+        this.mMiddleNameTimePeriod = mMiddleNameTimePeriod;
     }
 
 

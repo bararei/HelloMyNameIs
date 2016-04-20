@@ -14,7 +14,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 /**
- * Created by Ali on 4/9/2016.
+ * @author Ali Abercrombie
+ * @created 4/9/2016
+ * @version 1.0.0
+ *
+ * Introductory fragment that is only displayed the first time the app is loaded. Displays information
+ * about the app and gets the user's preferred name and stores it to shared preferences.
  */
 public class IntroFragment extends Fragment implements AppStatics{
     TextView mWelcome;
@@ -26,11 +31,18 @@ public class IntroFragment extends Fragment implements AppStatics{
     OnSubmitListener mCallback;
 
 
+    /**
+     * MainActivity implements this interface so the fragment can deliver information.
+     */
     //Container activity must implement this interface so that the fragment can deliver information
     public interface OnSubmitListener {
         void onSubmitClickIntroHelp();
     }
 
+    /**
+     * Used to make sure MainActivity has implemented the OnSubmitListener callback.
+     * @param activity the activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -45,25 +57,48 @@ public class IntroFragment extends Fragment implements AppStatics{
         }
     }
 
-        @Override
+    /**
+     * Perform initialization of all fragments and loaders.
+     *
+     * @param savedInstanceState the savedInstanceState
+     */
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * Includes two textviews with project information, an EditText for the user's name, and a Button
+     * which when clicked sends the user to the next screen.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate
+     *                           any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's
+     *                           UI should be attached to.  The fragment should not add the view itself,
+     *                           but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state.
+     * @return view
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       // return super.onCreateView(inflater, container, savedInstanceState);
 
+        //inflate the view
         View view = inflater.inflate(R.layout.fragment_intro, container, false);
 
+        //hide the Floating Action Button
         ((MainActivity) getActivity()).hideFab();
 
+        //Wire up the widgets
         mWelcome = (TextView) view.findViewById(R.id.welcome);
         mIntro = (TextView) view.findViewById(R.id.project_help_intro);
         mAuthorName = (EditText) view.findViewById(R.id.enter_author_name);
         mBtnGoToProject = (Button) view.findViewById(R.id.btn_go_to_project);
 
+        //When button is clicked, set name from mAuthorName as name in shared preferences and then
+        //execute mCallback
         mBtnGoToProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

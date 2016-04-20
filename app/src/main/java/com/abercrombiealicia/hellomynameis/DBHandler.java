@@ -411,10 +411,10 @@ public class DBHandler extends SQLiteOpenHelper {
                         String timePeriod = cursor2.getString(3);
                         String gender = cursor2.getString(4);
 
-                        nameListObject.setmLastName(middleName);
-                        nameListObject.setmLastNameRegion(region);
-                        nameListObject.setmLastNameTimePeriod(timePeriod);
-                        nameListObject.setmLastNameGender(gender);
+                        nameListObject.setmMiddleName(middleName);
+                        nameListObject.setmMiddleNameRegion(region);
+                        nameListObject.setmMiddleNameTimePeriod(timePeriod);
+                        nameListObject.setmMiddleNameGender(gender);
                     }
                 }
                 cursor2.close();

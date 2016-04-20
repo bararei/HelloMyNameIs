@@ -65,7 +65,7 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
 
     /**
      * Used to make sure MainActivity has implemented the OnSubmitListener callback.
-     * @param activity
+     * @param activity the activity
      */
     @Override
     public void onAttach(Activity activity) {
@@ -242,8 +242,8 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
      * a database query.
      */
     public void addGenderToArray() {
-        genderArraylist.add("M");
-        genderArraylist.add("F");
+        genderArraylist.add("Male");
+        genderArraylist.add("Female");
     }
 
     /**

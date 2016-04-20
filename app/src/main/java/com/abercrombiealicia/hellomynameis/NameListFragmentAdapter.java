@@ -11,7 +11,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by Spheven on 3/6/2016.
+ * @author Ali Abercrombie
+ * Created on 3/6/2016.
+ * @version 1.0.0
+ *
+ * This is the adapter for the NameListFragment. It takes an arrayList of NameListObjects.
  */
 
 
@@ -71,10 +75,10 @@ public class NameListFragmentAdapter extends RecyclerView
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
-        String name = mDataset.get(position).getmFirstName() + " " + mDataset.get(position).getmLastName();
-        String region = mDataset.get(position).getmFirstNameRegion() + " / " + mDataset.get(position).getmLastNameRegion();
-        String time = mDataset.get(position).getmFirstNameTimePeriod() + " / " + mDataset.get(position).getmLastNameTimePeriod();
-        String gender = mDataset.get(position).getmFirstNameGender() + " / " + mDataset.get(position).getmLastNameGender();
+        String name = mDataset.get(position).getmFirstName() + " " + mDataset.get(position).getmMiddleName();
+        String region = mDataset.get(position).getmFirstNameRegion() + " / " + mDataset.get(position).getmMiddleNameRegion();
+        String time = mDataset.get(position).getmFirstNameTimePeriod() + " / " + mDataset.get(position).getmMiddleNameTimePeriod();
+        String gender = mDataset.get(position).getmFirstNameGender() + " / " + mDataset.get(position).getmMiddleNameGender();
         holder.firstName.setText(name);
         holder.firstNameRegion.setText(region);
         holder.firstNameTimePeriod.setText(time);
