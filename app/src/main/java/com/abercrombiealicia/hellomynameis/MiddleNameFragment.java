@@ -141,6 +141,7 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
 
         mSpinnerRegion.setAdapter(regionAdapter);
         mSpinnerRegion.setOnItemSelectedListener(this);
+        mSpinnerRegion.setSelection(SpinnerSingleton.get(getContext()).getmRegionPosition());
 
         //wire up time period adapter
         ArrayAdapter<String> timePeriodAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, timeArraylist);
@@ -148,6 +149,7 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
 
         mSpinnerTime.setAdapter(timePeriodAdapter);
         mSpinnerTime.setOnItemSelectedListener(this);
+        mSpinnerTime.setSelection(SpinnerSingleton.get(getContext()).getmTimePosition());
 
         //wire up gender adapter
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, genderArraylist);
@@ -155,13 +157,13 @@ public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSe
 
         mSpinnerGender.setAdapter(genderAdapter);
         mSpinnerGender.setOnItemSelectedListener(this);
+        mSpinnerGender.setSelection(SpinnerSingleton.get(getContext()).getmGenderPosition());
 
         //gets the names from the database and populates the namesArrayList if all spinners are set
         mBtnGetNames.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mRegion != "" && mTimePeriod != "" && mGender != "") {
                     namesArrayList = dbHandler.getNamesFromDatabase(mRegion, mTimePeriod, mGender);
-                    Log.d("TAG", namesArrayList.toString());
 
                     mRecyclerView.setLayoutManager(mLayoutManager);
                     mAdapter = new NameFragmentAdapter(namesArrayList);

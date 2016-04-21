@@ -56,7 +56,7 @@ public class DBHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
         //onUpgrade(db, 1, DATABASE_VERSION);
-        addNamesToDatabase(context, db);
+       addNamesToDatabase(context, db);
     }
     /**
      * Called when the database is created for the first time. Creates projects, names, and namelist
@@ -233,6 +233,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
             allNames.add(cursor.getString(0));
+                Log.d("name", cursor.getString(0));
+
         }
 
         return allNames;

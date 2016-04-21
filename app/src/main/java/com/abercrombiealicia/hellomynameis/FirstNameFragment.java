@@ -213,12 +213,15 @@ public class FirstNameFragment extends Fragment implements AdapterView.OnItemSel
         switch(parent.getId()) {
             case R.id.spinner_region_1:
                 mRegion = regionArrayList.get(position);
+                SpinnerSingleton.get(getContext()).setmRegionPosition(position);
                 break;
             case R.id.spinner_time_1:
                 mTimePeriod = timeArraylist.get(position);
+                SpinnerSingleton.get(getContext()).setmTimePosition(position);
                 break;
             case R.id.spinner_gender_1:
                 mGender = genderArraylist.get(position);
+                SpinnerSingleton.get(getContext()).setmGenderPosition(position);
                 break;
         }
 

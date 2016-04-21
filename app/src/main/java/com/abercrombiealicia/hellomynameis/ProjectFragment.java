@@ -27,13 +27,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * Created by Spheven on 3/19/2016.
+ * @author Ali Abercrombie
+ * Created on 3/19/2016.
+ * @version 1.0.0
+ *
+ * Displays all the projects created by the user. Uses a recyclerView.
  */
 public class ProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener,
         AdapterView.OnItemLongClickListener{
 
-    TextView mIntro;
-    TextView mMyProject;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -43,16 +45,20 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     String mProjectName;
     String mProjectDescription;
 
-
     OnSubmitListener mCallback;
 
 
-    //Container activity must implement this interface so that the fragment can deliver information
+    /**
+     * MainActivity implements this interface so the fragment can deliver information.
+     */
     public interface OnSubmitListener {
         void onSubmitClickProjectList();
     }
 
-
+    /**
+     * Used to make sure MainActivity has implemented the OnSubmitListener callback.
+     * @param activity the activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -68,18 +74,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     }
 
     /**
-     * Called to do initial creation of a fragment.  This is called after
-     * {@link #onAttach(Activity)} and before
-     * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * <p/>
-     * <p>Note that this can be called while the fragment's activity is
-     * still in the process of being created.  As such, you can not rely
-     * on things like the activity's content view hierarchy being initialized
-     * at this point.  If you want to do work once the activity itself is
-     * created, see {@link #onActivityCreated(Bundle)}.
+     * Perform initialization of all fragments and loaders.
      *
-     * @param savedInstanceState If the fragment is being re-created from
-     *                           a previous saved state, this is the state.
+     * @param savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +86,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     /**
      * Called to have the fragment instantiate its user interface view.
-     * This is optional, and non-graphical fragments can return null (which
-     * is the default implementation).  This will be called between
-     * {@link #onCreate(Bundle)} and {@link #onActivityCreated(Bundle)}.
-     * <p/>
-     * <p>If you return a View from here, you will later be called in
-     * {@link #onDestroyView} when the view is being released.
+     * Sets the view and sets the recyclerView.
+     * Sets onClickListener behavior for adapter. Sets behavior for Floating Action Button. Finally,
+     * calls mCallback.
      *
      * @param inflater           The LayoutInflater object that can be used to inflate
      *                           any views in the fragment,
@@ -108,17 +102,19 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
 
         final View view = inflater.inflate(R.layout.fragment_project, container, false);
 
+        //show FAB
         ((MainActivity) getActivity()).showFab();
 
 
         DBHandler dbHandler = new DBHandler(getContext());
+
+        //get all projects from database
         projectArrayList = dbHandler.getProjectsFromDatabase();
 
-        //RecyclerView stuff... needs to be more robust, just a placeholder
+        //set the recyclerView
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_project);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -129,28 +125,40 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
-        registerForContextMenu(mRecyclerView);
-
+        //set the onTouchListener from the custom RecyclerItemClickListener class
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+
+            /**
+             * Set project name and project description in the singleton from the
+             * projectArrayList and then calls mCallback to send user to NameListFragment.
+             * @param childView View of the item that was clicked.
+             * @param position  Position of the item that was clicked.
+             */
             @Override
             public void onItemClick(View childView, int position) {
-                Log.i("LOG", " Clicked on Item " + position);
                 NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
                         (position).getProjectName());
                 NameListSingleton.get(getContext()).setmProjectDescription(projectArrayList.get(position).getProjectDescription());
-                Log.i("LOG", "Singleton info is " + NameListSingleton.get(getContext()).getProjectName());
 
                 mCallback.onSubmitClickProjectList();
             }
 
+            /**
+             * Allows a user to delete a project from the list of projects with long press.
+             * @param childView View of the item that was long pressed.
+             * @param position  Position of the item that was long pressed.
+             */
             @Override
             public void onItemLongPress(View childView, final int position) {
                 final ProjectObject projectObject;
                 projectObject = projectArrayList.get(position);
 
+                //save project as object and then delete from database
                 deleteProjectFromList(position);
+                //remove from arraylist
                 removeAtPosition(position);
 
+                //notify user item has been deleted and offer chance to undo
                 Snackbar snackbar = Snackbar
                         .make(childView, "Project has been deleted", Snackbar.LENGTH_LONG)
                         .setAction("UNDO", new View.OnClickListener() {
@@ -158,8 +166,11 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                             public void onClick(View v) {
 
                                 DBHandler dbHandler = new DBHandler(getContext());
+                                //get project information from object and add back to database
                                 dbHandler.reAddProjectToDatabase(projectDatabaseObject.getmProjectID(),
                                         projectDatabaseObject.getmProjectName(), projectDatabaseObject.getmProjectDescription());
+                                //add back into projectArrayList at same position and notify
+                                // adapter change.
                                 projectArrayList.add(position, projectObject);
                                 mAdapter.notifyItemInserted(position);
 
@@ -168,12 +179,18 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                 snackbar.show();
             }
         }) {
+            /**
+             * Necessary for abstract method but never used
+             * @param disallowIntercept whether or not intercept is allowed
+             */
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
             }
         });
 
+
+        //FAB allows user to add a new project through AlertDialog
         MainActivity mainActivity = (MainActivity)getActivity();
         mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 
@@ -204,7 +221,6 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                         //add logic here to add project information to database
                         DBHandler dbHandler = new DBHandler(getContext());
                         dbHandler.addProjectToDatabase(mProjectName,mProjectDescription);
-                        Log.d("LOG", mProjectName + " added to database");
 
                         projectArrayList = dbHandler.getProjectsFromDatabase();
                         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -267,11 +283,30 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
+    /**
+     * <p>Callback method to be invoked when an item in this view has been
+     * selected. This callback is invoked only when the newly selected
+     * position is different from the previously selected position or if
+     * there was no selected item.</p>
+     * <p/>
+     * Impelmenters can call getItemAtPosition(position) if they need to access the
+     * data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the selection happened
+     * @param view     The view within the AdapterView that was clicked
+     * @param position The position of the view in the adapter
+     * @param id       The row id of the item that is selected
+     * @return false
+     */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         return false;
     }
 
+    /**
+     * Saves the project information to a ProjectObject and then deletes it from the database
+     * @param position the position of the item in the list
+     */
     public void deleteProjectFromList(int position) {
         DBHandler dbHandler = new DBHandler(getContext());
         NameListSingleton.get(getContext()).setProjectName(projectArrayList.get
@@ -287,6 +322,13 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
+    /**
+     * Instantiates a projectDatabaseObject and then stores the project information to it in case
+     * the user wants to undo their delete
+     * @param projectID
+     * @param projectName
+     * @param projectDescription
+     */
     public void saveNameToObject(int projectID, String projectName, String projectDescription) {
         projectDatabaseObject = new ProjectDatabaseObject();
         projectDatabaseObject.setmProjectID(projectID);
@@ -295,6 +337,10 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
     }
 
+    /**
+     * Lets the recyclerView adapter know the item has been removed and at what position
+     * @param position the position of the item to be removed
+     */
     public void removeAtPosition(int position) {
         projectArrayList.remove(position);
         mAdapter.notifyItemRemoved(position);

@@ -39,13 +39,12 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     private NameListDatabaseObject nameListDatabaseObject;
     private ArrayList<NameListObject> mNamesListArrayList = new ArrayList<>();
 
+
+    OnSubmitListener mCallback;
+
     /**
      * MainActivity implements this interface so the fragment can deliver information.
      */
-    OnSubmitListener mCallback;
-
-
-    //Container activity must implement this interface so that the fragment can deliver information
     public interface OnSubmitListener {
         void onSubmitClickNameList();
     }
@@ -234,7 +233,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         String projectName = NameListSingleton.get(getContext()).getProjectName();
         int projectID = dbHandler.getProjectId(projectName);
         String firstName = mNamesListArrayList.get(position).getmFirstName();
-        String middleName = mNamesListArrayList.get(position).getmLastName();
+        String middleName = mNamesListArrayList.get(position).getmMiddleName();
         int firstNameID = dbHandler.getNameId(firstName);
         int middleNameID = dbHandler.getNameId(middleName);
 

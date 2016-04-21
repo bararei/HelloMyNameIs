@@ -48,6 +48,9 @@ public class HelpFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_help, container, false);
 
+        //hide the Floating Action Button
+        ((MainActivity) getActivity()).hideFab();
+
         mWelcome = (TextView) view.findViewById(R.id.help_intro);
         mHelpText = (TextView) view.findViewById(R.id.help_text);
 

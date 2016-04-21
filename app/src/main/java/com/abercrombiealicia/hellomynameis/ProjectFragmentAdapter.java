@@ -13,7 +13,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 /**
- * Created by Spheven on 3/6/2016.
+ * @author Ali Abercrombie
+ * Created on 3/6/2016
+ * @version 1.0.0
+ *
+ * RecyclerView adapter for the ProjectFragment. It takes an arrayList of Project Objects
  */
 
 
@@ -45,31 +49,10 @@ public class ProjectFragmentAdapter extends RecyclerView
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.projectItem);
             description = (TextView) itemView.findViewById(R.id.projectDescription);
-            Log.i("TEST", "Adding Project Listeners");
-            //itemView.setOnClickListener(this);
         }
 
-        /*@Override
-        public void onClick(View v) {
-            myClickListener.onItemClick(getPosition(), v);
-        }
-
-        /**
-         * Called when a view has been clicked and held.
-         *
-         * @param v The view that was clicked and held.
-         * @return true if the callback consumed the long click, false otherwise.
-         */
-       /* @Override
-        public boolean onLongClick(View v) {
-            myClickListener.onItemLongClick();
-            return true;
-        }*/
     }
 
-   /* public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
-    }*/
 
     public ProjectFragmentAdapter(ArrayList<ProjectObject> myDataset) {
         mDataset = myDataset;

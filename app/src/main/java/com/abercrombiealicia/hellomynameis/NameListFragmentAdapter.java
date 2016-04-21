@@ -43,8 +43,7 @@ public class NameListFragmentAdapter extends RecyclerView
             firstNameRegion = (TextView) itemView.findViewById(R.id.namelist_first_name_region);
             firstNameTimePeriod = (TextView) itemView.findViewById(R.id.namelist_first_name_time);
             firstNameGender = (TextView) itemView.findViewById(R.id.namelist_first_name_gender);
-
-            Log.i("TEST", "Adding NameList Listeners");
+            
             itemView.setOnClickListener(this);
         }
 
@@ -83,7 +82,6 @@ public class NameListFragmentAdapter extends RecyclerView
         holder.firstNameRegion.setText(region);
         holder.firstNameTimePeriod.setText(time);
         holder.firstNameGender.setText(gender);
-        Log.i("TEST", "Adding BindViewHolder NameList Listeners");
     }
 
     public void addItem(NameListObject nameListObject, int index) {

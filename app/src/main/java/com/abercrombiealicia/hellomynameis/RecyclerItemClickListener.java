@@ -8,7 +8,15 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by Spheven on 3/29/2016.
+ * @author Ali Abercrombie
+ * Created on 3/29/2016.
+ * @version 1.0.0
+ *
+ * <p>Adapted from https://gist.github.com/lnikkila/d9493a0626e89059c6aa with a very small amount of
+ * changes. Mad props to lnikkila for creating this. </p>
+ *
+ * <p>Allows for easy implementation of both regular and long presses on a recyclerView using
+ * gesture detection.</p>
  */
 public abstract class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
