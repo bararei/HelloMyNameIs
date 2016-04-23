@@ -137,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
                         NameListSingleton.get(MainActivity.this).setmProjectDescription
                                 (projectNamesArrayList.get(recyclerView.getChildPosition(child) - 2)
                                         .getProjectDescription());
-                        Log.i("LOG", "Singleton info is " + NameListSingleton.get(MainActivity.this)
-                                .getProjectName());
 
                         if (findViewById(R.id.fragmentContainer)!= null) {
                             NameListFragment nameListFragment = new NameListFragment();
@@ -297,13 +295,7 @@ public class MainActivity extends AppCompatActivity implements FirstNameFragment
         transaction.addToBackStack("ProjectFragment");
         transaction.commit();
 
-        projectNamesArrayList = dbHandler.getProjectsForDrawerList();
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new DrawerAdapter(projectNamesArrayList);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.notifyDataSetChanged();
+        updateDrawer();
 
     }
 

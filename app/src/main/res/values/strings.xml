@@ -31,4 +31,7 @@
                                 you\'ll be taken back to the individual project screen.</string>
     <string name="hint_change_name">Type your new name here</string>
     <string name="toast_change_name">Head on over to Settings to change your name!</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="add_a_project">You haven\'t added any projects yet! Click the add button to get started</string>
+    <string name="add_a_name">You haven\'t added any names yet! Click the add button to get started</string>
 </resources>

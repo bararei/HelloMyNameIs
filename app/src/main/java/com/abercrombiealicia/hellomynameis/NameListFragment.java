@@ -18,6 +18,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -33,6 +36,7 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     TextView mProjectName;
     TextView mProjectDescription;
     TextView mMyNames;
+    TextView mAddAName;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -98,11 +102,19 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
 
         final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("YOUR_DEVICE_HASH")
+                .build();
+
+        mAdView.loadAd(adRequest);
+
         ((MainActivity) getActivity()).showFab();
         //wire up the widgets
         mProjectName = (TextView) view.findViewById(R.id.namelist_project_name);
         mProjectDescription = (TextView) view.findViewById(R.id.namelist_project_description);
         mMyNames = (TextView) view.findViewById(R.id.namelist_my_names);
+        mAddAName = (TextView) view.findViewById(R.id.add_a_name);
 
         //set name and description from singleton
         mProjectName.setText("Project Name: " + NameListSingleton.get(getContext()).getProjectName());
@@ -124,6 +136,10 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
+        //check whether the array is empty and display message telling people to add names if it is
+        setEmptyViewVisibility();
+
+
         //set onClickListener behavior
         ((NameListFragmentAdapter) mAdapter).setOnItemClickListener(new NameListFragmentAdapter.MyClickListener() {
             @Override
@@ -136,6 +152,8 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
                 deleteNameFromList(position);
                 //delete from arraylist and update adapter
                 removeAtPosition(position);
+
+                setEmptyViewVisibility();
 
                 Snackbar snackbar = Snackbar
                         .make(v, "Name has been deleted", Snackbar.LENGTH_LONG)
@@ -150,6 +168,8 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
                                         nameListDatabaseObject.getNameID1(), nameListDatabaseObject.getNameID2());
                                 mNamesListArrayList.add(position, item);
                                 mAdapter.notifyItemInserted(position);
+
+                                setEmptyViewVisibility();
 
                             }
                         });
@@ -266,6 +286,20 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
         nameListDatabaseObject.setNameID2(middleNameID);
 
 
+    }
+
+    /**
+     * Checks to see if the mNamesListArrayList is empty. If so, displays a message letting people know
+     * to add a name.
+     */
+    public void setEmptyViewVisibility() {
+        if(mNamesListArrayList.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            mAddAName.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mAddAName.setVisibility(View.GONE);
+        }
     }
 
 

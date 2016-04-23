@@ -2,7 +2,9 @@ package com.abercrombiealicia.hellomynameis;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -10,6 +12,9 @@ import android.support.annotation.Nullable;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -18,11 +23,20 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.abercrombiealicia.hellomynameis.R.id;
+import com.abercrombiealicia.hellomynameis.R.layout;
+import com.abercrombiealicia.hellomynameis.RecyclerItemClickListener.OnItemClickListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 
@@ -33,19 +47,20 @@ import java.util.ArrayList;
  *
  * Displays all the projects created by the user. Uses a recyclerView.
  */
-public class ProjectFragment extends Fragment implements AdapterView.OnItemSelectedListener,
-        AdapterView.OnItemLongClickListener{
+public class ProjectFragment extends Fragment implements OnItemSelectedListener,
+        OnItemLongClickListener{
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private Adapter mAdapter;
+    private LayoutManager mLayoutManager;
     private ProjectDatabaseObject projectDatabaseObject;
     private ArrayList<ProjectObject> projectArrayList = new ArrayList<>();
+    private TextView mAddAProject;
 
     String mProjectName;
     String mProjectDescription;
 
-    OnSubmitListener mCallback;
+    ProjectFragment.OnSubmitListener mCallback;
 
 
     /**
@@ -66,9 +81,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception.
         try {
-            mCallback = (OnSubmitListener) activity;
+            mCallback = (ProjectFragment.OnSubmitListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(activity
                     + " must implement OnSubmitListener");
         }
     }
@@ -81,6 +96,8 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
 
@@ -101,9 +118,17 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
      */
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_project, container, false);
+        View view = inflater.inflate(layout.fragment_project, container, false);
+
+        AdView mAdView = (AdView) view.findViewById(id.adView);
+        //mAdView.setAdSize(AdSize.SMART_BANNER);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        mAdView.loadAd(adRequest);
 
         //show FAB
         ((MainActivity) getActivity()).showFab();
@@ -114,19 +139,25 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         //get all projects from database
         projectArrayList = dbHandler.getProjectsFromDatabase();
 
+        //set the empty view
+        mAddAProject = (TextView) view.findViewById(id.add_a_project);
+
         //set the recyclerView
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_project);
+        mRecyclerView = (RecyclerView) view.findViewById(id.recycler_view_project);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ProjectFragmentAdapter(projectArrayList);
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.ItemDecoration itemDecoration =
+        ItemDecoration itemDecoration =
                 new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(itemDecoration);
 
+        //check if the recyclerView is empty and display message to add project if it is
+        setEmptyViewVisibility();
+
         //set the onTouchListener from the custom RecyclerItemClickListener class
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new OnItemClickListener() {
 
             /**
              * Set project name and project description in the singleton from the
@@ -157,6 +188,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                 deleteProjectFromList(position);
                 //remove from arraylist
                 removeAtPosition(position);
+                ((MainActivity) getActivity()).updateDrawer();
+
+                setEmptyViewVisibility();
 
                 //notify user item has been deleted and offer chance to undo
                 Snackbar snackbar = Snackbar
@@ -173,6 +207,9 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
                                 // adapter change.
                                 projectArrayList.add(position, projectObject);
                                 mAdapter.notifyItemInserted(position);
+                                ((MainActivity) getActivity()).updateDrawer();
+
+                                setEmptyViewVisibility();
 
                             }
                         });
@@ -197,21 +234,21 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                Builder builder = new Builder(getContext());
 
                 LayoutInflater inflater = getActivity().getLayoutInflater();
-                final View view1 = inflater.inflate(R.layout.dialog_add_project, null);
+                final View view1 = inflater.inflate(layout.dialog_add_project, null);
                 builder.setView(view1);
 
                 builder.setTitle( Html.fromHtml("<font color='#DAA520'>Add A New Project</font>"));
 
-                builder.setPositiveButton("Add Project", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Add Project", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EditText projectName = (EditText) view1.findViewById(R.id.input_project_name);
+                        EditText projectName = (EditText) view1.findViewById(id.input_project_name);
                         mProjectName = projectName.getText().toString();
 
-                        EditText projectDescription = (EditText) view1.findViewById(R.id.input_project_description);
+                        EditText projectDescription = (EditText) view1.findViewById(id.input_project_description);
                         mProjectDescription = projectDescription.getText().toString();
 
                         if (mProjectName.isEmpty()) {
@@ -230,11 +267,13 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
 
                         ((MainActivity) getActivity()).updateDrawer();
 
+                        setEmptyViewVisibility();
+
 
                     }
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -345,6 +384,20 @@ public class ProjectFragment extends Fragment implements AdapterView.OnItemSelec
         projectArrayList.remove(position);
         mAdapter.notifyItemRemoved(position);
         mAdapter.notifyItemRangeChanged(position, projectArrayList.size());
+    }
+
+    /**
+     * Checks to see if the projectArrayList is empty. If so, displays a message letting people know
+     * to add a project.
+     */
+    public void setEmptyViewVisibility() {
+        if (projectArrayList.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            mAddAProject.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mAddAProject.setVisibility(View.GONE);
+        }
     }
 
 
