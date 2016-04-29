@@ -1,4 +1,4 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 /**
  * @author Ali Abercrombie

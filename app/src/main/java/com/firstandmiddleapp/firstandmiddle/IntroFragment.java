@@ -1,4 +1,4 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.firstandmiddleapp.hellomynameis.R;
 
 /**
  * @author Ali Abercrombie

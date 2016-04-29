@@ -1,15 +1,14 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
+
+import com.firstandmiddleapp.hellomynameis.R;
 
 import java.util.ArrayList;
 /**

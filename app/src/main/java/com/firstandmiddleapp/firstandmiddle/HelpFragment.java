@@ -1,4 +1,4 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.firstandmiddleapp.hellomynameis.R;
 
 /**
  * @author Ali Abercrombie

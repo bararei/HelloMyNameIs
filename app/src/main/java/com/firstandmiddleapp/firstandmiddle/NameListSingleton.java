@@ -1,8 +1,7 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 /**
  * @author Ali Abercrombie
  * Created on 3/9/2016

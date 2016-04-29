@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.abercrombiealicia.hellomynameis"
+        applicationId "com.firstandmiddleapp.firstandmiddle"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 1
@@ -13,8 +13,7 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -30,4 +29,5 @@ dependencies {
     compile 'com.github.frankiesardo:icepick-processor:2.3.6'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile files('libs/org.apache.http.legacy.jar')
 }

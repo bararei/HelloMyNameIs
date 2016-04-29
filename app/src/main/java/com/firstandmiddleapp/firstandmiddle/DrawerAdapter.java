@@ -1,4 +1,4 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 /**
  * Created by Ali on 4/4/2016.
@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.firstandmiddleapp.hellomynameis.R;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
-package com.abercrombiealicia.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -16,10 +15,7 @@ import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.text.Html;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,15 +23,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.abercrombiealicia.hellomynameis.R.id;
-import com.abercrombiealicia.hellomynameis.R.layout;
-import com.abercrombiealicia.hellomynameis.RecyclerItemClickListener.OnItemClickListener;
+import com.firstandmiddleapp.hellomynameis.R.id;
+import com.firstandmiddleapp.hellomynameis.R.layout;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
@@ -157,7 +148,7 @@ public class ProjectFragment extends Fragment implements OnItemSelectedListener,
         setEmptyViewVisibility();
 
         //set the onTouchListener from the custom RecyclerItemClickListener class
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new OnItemClickListener() {
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
 
             /**
              * Set project name and project description in the singleton from the
