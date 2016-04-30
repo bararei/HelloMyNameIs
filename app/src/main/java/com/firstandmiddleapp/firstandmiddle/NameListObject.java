@@ -1,12 +1,12 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
+ * An object that holds all the information about a set of two names, including region, gender and time period.
+ * Makes an arrayList for the NameListFragment.
+ *
  * @author Ali Abercrombie
  * Created on 3/25/2016.
  * @version 1.0.0
- *
- * An object that holds all the information about a set of two names, including region, gender and time period.
- * Makes an arrayList for the NameListFragment.
  */
 public class NameListObject {
 

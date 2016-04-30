@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
 
 /**
+ * Displays the help text about the app for the user.
  * @author Ali Abercrombie
  * @version 1.0.0
- *
- * Help Fragment displays the help text about the app for the user.
  *
  */
 public class HelpFragment extends Fragment {

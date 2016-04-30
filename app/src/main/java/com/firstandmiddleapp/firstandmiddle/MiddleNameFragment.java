@@ -15,20 +15,18 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 import java.util.ArrayList;
 
 import icepick.Icepick;
 import icepick.Icicle;
 
 /**
+ * Displays the middle name selection options available from the database based on region,
+ * time period and gender selections by the user.
+ *
  * @author Ali Abercrombie
  * Created on 3/17/2016
  * @version 1.0.0
- *
- * This fragment displays the middle name selection options available from the database based on region,
- * time period and gender selections by the user.
  */
 public class MiddleNameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 

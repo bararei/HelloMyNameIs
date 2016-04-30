@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'AndroidKey'
+            keyPassword 'D!pper-Zo0'
+            storeFile file('C:/Users/Ali/Documents/Android Keycode/androidappskeycode.jks')
+            storePassword 'D!pper-Zo0'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.firstandmiddleapp.firstandmiddle"
         minSdkVersion 10
@@ -29,5 +36,6 @@ dependencies {
     compile 'com.github.frankiesardo:icepick-processor:2.3.6'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.amazon.android:mobile-ads:5.+'
     compile files('libs/org.apache.http.legacy.jar')
 }

@@ -13,15 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 /**
+ * Introductory fragment that is only displayed the first time the app is loaded. Displays information
+ * about the app and gets the user's preferred name and stores it to shared preferences.
+ * 
  * @author Ali Abercrombie
  * @created 4/9/2016
  * @version 1.0.0
  *
- * Introductory fragment that is only displayed the first time the app is loaded. Displays information
- * about the app and gets the user's preferred name and stores it to shared preferences.
+ *
  */
 public class IntroFragment extends Fragment implements AppStatics{
     TextView mWelcome;

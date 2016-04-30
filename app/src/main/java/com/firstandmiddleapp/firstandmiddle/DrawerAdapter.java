@@ -1,13 +1,12 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
- * Created by Ali on 4/4/2016.
- * @author Ali Abercrombie
- * @created 4/42016
- * @version 1.0.0
  * Adapted from http://www.android4devs.com/2014/12/how-to-make-material-design-navigation-drawer.html
  * Creates the recyclerview for the navigation drawer. Also adds in header and home navigation depending
  * on the type of view.
+ * @author Ali Abercrombie
+ * @created 4/42016
+ * @version 1.0.0
  */
 
 
@@ -18,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
+import com.firstandmiddleapp.firstandmiddle.R;
 
 import java.util.ArrayList;
 

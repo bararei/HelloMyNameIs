@@ -3,12 +3,11 @@ package com.firstandmiddleapp.firstandmiddle;
 import android.content.Context;
 
 /**
+ * Holds the spinner positions for the first name spinners so they can be accessed by
+ * middle name spinners and immediately set as defaults in the MiddleNameFragment.
  * @author Ali Abercrombie
  * Created on 4/21/2016.
  * @version 1.0.0
- *
- * This singleton holds the spinner positions for the first name spinners so they can be accessed by
- * middle name spinners and immediately set as defaults in the MiddleNameFragment.
  */
 public class SpinnerSingleton {
 

@@ -28,11 +28,14 @@
                                 by tapping on them. \n\n
                                 Select an option from each of the three spinners on the first or middle name pages and tap \'Get Names\' to see
                                 all the names available. Tap a name to choose it. After tapping the middle name
-                                you\'ll be taken back to the individual project screen.</string>
+                                you\'ll be taken back to the individual project screen.\n\n
+                                For more information about First &amp; Middle or for support questions, please visit
+                                www.firstandmiddleapp.com or email support@firstandmiddleapp.com.</string>
     <string name="hint_change_name">Type your new name here</string>
     <string name="toast_change_name">Head on over to Settings to change your name!</string>
     <string name="add_a_project">You haven\'t added any projects yet! Click the add button to get started</string>
     <string name="add_a_name">You haven\'t added any names yet! Click the add button to get started</string>
     <string name="banner_ad_unit_id_projects">ca-app-pub-1195479400300122/3305956291</string>
     <string name="banner_ad_unit_namelist">ca-app-pub-1195479400300122/4782689497</string>
+    <string name="amazon_app_key">33667c837b8f42989dfcde78ca544e2a</string>
 </resources>

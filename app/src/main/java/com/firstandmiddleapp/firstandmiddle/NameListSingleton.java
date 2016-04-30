@@ -3,12 +3,12 @@ package com.firstandmiddleapp.firstandmiddle;
 import android.content.Context;
 
 /**
+ * Stores the project name and description and first and middle names so they can be shared
+ * across the Project, NameList, FirstName and MiddleName fragments.
+ *
  * @author Ali Abercrombie
  * Created on 3/9/2016
  * @version 1.0.0
- *
- * This singleton stores the project name and description and first and middle names so they can be shared
- * across the Project, NameList, FirstName and MiddleName fragments.
  */
 public class NameListSingleton {
 

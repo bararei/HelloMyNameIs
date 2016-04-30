@@ -1,4 +1,4 @@
-package com.firstandmiddleapp.hellomynameis;
+package com.firstandmiddleapp.firstandmiddle;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

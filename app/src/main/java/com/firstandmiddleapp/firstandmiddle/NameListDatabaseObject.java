@@ -1,11 +1,11 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
+ * Holds an individual namelist item from the database. Used to create an arraylist.
+ *
  * @author Ali Abercrombie
  * Created on 3/29/2016.
  * @version 1.0.0
- *
- * Holds an individual namelist item from the database. Used to create an arraylist.
  */
 public class NameListDatabaseObject {
 

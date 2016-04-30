@@ -1,7 +1,10 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
- * Created by Ali on 4/9/2016.
+ * Holds the app static variables for the project
+ * @author Ali Abercrombie
+ * @created 4/19/2016
+ * @version 1.0.0
  */
 public interface AppStatics {
 

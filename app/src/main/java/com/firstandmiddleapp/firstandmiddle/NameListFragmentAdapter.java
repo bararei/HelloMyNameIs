@@ -7,16 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 import java.util.ArrayList;
 
 /**
+ * The adapter for the NameListFragment. It takes an arrayList of NameListObjects.
  * @author Ali Abercrombie
  * Created on 3/6/2016.
  * @version 1.0.0
- *
- * This is the adapter for the NameListFragment. It takes an arrayList of NameListObjects.
  */
 
 

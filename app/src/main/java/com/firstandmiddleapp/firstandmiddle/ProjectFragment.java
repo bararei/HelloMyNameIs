@@ -24,19 +24,21 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R.id;
-import com.firstandmiddleapp.hellomynameis.R.layout;
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdRegistration;
+import com.firstandmiddleapp.firstandmiddle.R.id;
+import com.firstandmiddleapp.firstandmiddle.R.layout;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.amazon.device.ads.*;
 
 import java.util.ArrayList;
 
 /**
+ * Displays all the projects created by the user. Uses a recyclerView.
  * @author Ali Abercrombie
  * Created on 3/19/2016.
  * @version 1.0.0
- *
- * Displays all the projects created by the user. Uses a recyclerView.
  */
 public class ProjectFragment extends Fragment implements OnItemSelectedListener,
         OnItemLongClickListener{
@@ -88,6 +90,8 @@ public class ProjectFragment extends Fragment implements OnItemSelectedListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Loading ad app key for Amazon App Store
+        AdRegistration.setAppKey("33667c837b8f42989dfcde78ca544e2a");
 
 
     }
@@ -113,13 +117,17 @@ public class ProjectFragment extends Fragment implements OnItemSelectedListener,
 
         View view = inflater.inflate(layout.fragment_project, container, false);
 
-        AdView mAdView = (AdView) view.findViewById(id.adView);
+        AdLayout adView = (AdLayout) view.findViewById(id.adviewAmazon);
+        adView.loadAd(new AdTargetingOptions());
+
+        //Ads for Google Play
+        /*AdView mAdView = (AdView) view.findViewById(id.adView);
         //mAdView.setAdSize(AdSize.SMART_BANNER);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
 
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
 
         //show FAB
         ((MainActivity) getActivity()).showFab();

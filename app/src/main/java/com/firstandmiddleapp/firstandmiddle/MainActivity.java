@@ -24,18 +24,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 import java.util.ArrayList;
 
 /**
- * @author Ali Abercrombie
- * @version 1.0.0
- *
- * The Main Activity class sets up the Navigation Drawer and the Floating Action Button,
+ * Sets up the Navigation Drawer and the Floating Action Button,
  * switches out each fragment as needed with interfaces from the fragments, including setting the
  * IntroFragment if it's the app's first run based on shared preferences, and handles the menu options
  * for the ActionBar.
+ *
+ * @author Ali Abercrombie
+ * @version 1.0.0
+ *
  */
 public class MainActivity extends AppCompatActivity implements FirstNameFragment.OnSubmitListener, MiddleNameFragment.OnSubmitListener,
                                         NavigationView.OnNavigationItemSelectedListener, ProjectFragment.OnSubmitListener, NameListFragment.OnSubmitListener,

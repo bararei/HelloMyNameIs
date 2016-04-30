@@ -8,15 +8,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 import java.util.ArrayList;
 /**
+ * RecyclerView adapter for the ProjectFragment. It takes an arrayList of Project Objects
+ *
  * @author Ali Abercrombie
  * Created on 3/6/2016
  * @version 1.0.0
- *
- * RecyclerView adapter for the ProjectFragment. It takes an arrayList of Project Objects
  */
 
 

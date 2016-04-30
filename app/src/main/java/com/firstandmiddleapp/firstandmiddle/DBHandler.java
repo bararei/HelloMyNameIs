@@ -17,12 +17,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
+ * Handles all methods for inputting and receiving information from
+ * the local 'hellomynameisDB.db'. The information for the database is stored in a csv file in assets.
+ *
  * @author Ali Abercrombie
  * @created 3/2/2016
  * @version 1.0.0
- *
- * This is the DBHandler class. It handles all methods for inputting and receiving information from
- * the local 'hellomynameisDB.db'. The information for the database is stored in a csv file in assets.
  */
 public class DBHandler extends SQLiteOpenHelper {
 

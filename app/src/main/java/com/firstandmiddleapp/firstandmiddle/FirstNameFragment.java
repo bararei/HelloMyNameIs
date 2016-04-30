@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
+import com.firstandmiddleapp.firstandmiddle.R;
 
 import java.util.ArrayList;
 
@@ -25,12 +25,11 @@ import icepick.Icicle;
 
 
 /**
- * @author Ali Abercrombie
+ * Displays the first name selection options available from the database based on region,
+ * time period and gender selections by the user.
+ *  @author Ali Abercrombie
  * @created 3/4/2016
  * @version 1.0.0
- *
- * This fragment displays the first name selection options available from the database based on region,
- * time period and gender selections by the user.
  */
 public class FirstNameFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 

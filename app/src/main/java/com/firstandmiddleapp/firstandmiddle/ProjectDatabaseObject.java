@@ -1,12 +1,12 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
+ * Project Object that stores all information for a project. Used to store project information when
+ * someone deletes a project from the database so it can be restored.
+ *
  * @author Ali Abercrombie
  * Created on 3/29/2016.
  * @version 1.0.0
- *
- * Project Object that stores all information for a project. Used to store project information when
- * someone deletes a project from the database so it can be restored.
  */
 public class ProjectDatabaseObject {
 

@@ -13,18 +13,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.ads.AdTargetingOptions;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 
 /**
+ * Displays the title and description of each individual project and the names attached to it.
  * @author Ali Abercrombie
  * Created on 3/19/2016.
  * @version 1.0.0
- *
- * This fragment displays the title and description of each individual project and the names attached to it.
  */
 public class NameListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -74,6 +75,9 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Loading ad app key for Amazon App Store
+        AdRegistration.setAppKey("33667c837b8f42989dfcde78ca544e2a");
     }
 
     /**
@@ -97,12 +101,17 @@ public class NameListFragment extends Fragment implements AdapterView.OnItemSele
 
         final View view = inflater.inflate(R.layout.fragment_namelist, container, false);
 
+        //Loading ads for Amazon App Store
+        AdLayout adView = (AdLayout) view.findViewById(R.id.adviewAmazon);
+        adView.loadAd(new AdTargetingOptions());
+
+        /*//Loading ads for Google Play
         AdView mAdView = (AdView) view.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("YOUR_DEVICE_HASH")
                 .build();
 
-        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);*/
 
         ((MainActivity) getActivity()).showFab();
         //wire up the widgets

@@ -1,12 +1,12 @@
 package com.firstandmiddleapp.firstandmiddle;
 
 /**
+ * Holds the project name and project description. Used to create navigation drawer and
+ * ProjectFragment recyclerView arrayLists
+ *
  * @author Ali Abercrombie
  * Created on 3/23/2016.
  * @version 1.0.0
- *
- * Holds the project name and project description. Used to create navigation drawer and
- * ProjectFragment recyclerView arrayLists
  */
 public class ProjectObject {
 

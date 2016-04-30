@@ -6,16 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firstandmiddleapp.hellomynameis.R;
-
 import java.util.ArrayList;
 /**
+ * Adapter for the First and Middle Name Fragments. Takes in an arrayList of Strings. Also implements
+ * a MyClickListener.
  * @author Ali Abercrombie
  * Created on 3/6/2016.
  * @version 1.0.0
- *
- * Adapter for the First and Middle Name Fragments. Takes in an arrayList of Strings. Also implements
- * a MyClickListener.
  */
 
 
